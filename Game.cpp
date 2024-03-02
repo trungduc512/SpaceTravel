@@ -25,6 +25,10 @@ void Game::Run()
             if( event.type == SDL_QUIT ) quit = true;
         }
     }
+}
+
+void Game::Quit()
+{
     SDL_DestroyWindow( window );
     SDL_DestroyRenderer( renderer );
     SDL_Quit();

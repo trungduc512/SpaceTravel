@@ -10,6 +10,7 @@ public:
     Game();
     bool Init();
     void Run();
+    void Quit();
 private:
     SDL_Renderer* renderer;
     SDL_Window* window;
