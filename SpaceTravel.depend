@@ -1,0 +1,16 @@
+# depslib dependency file v1.0
+1709168002 source:c:\users\pc-fptlaptop\documents\codeblock\spacetravel\main.cpp
+	<iostream>
+	"Game.h"
+
+1708958534 source:c:\users\pc-fptlaptop\documents\codeblock\spacetravel\initgame.cpp
+
+1709167867 c:\users\pc-fptlaptop\documents\codeblock\spacetravel\gameconstants.h
+
+1709285357 source:c:\users\pc-fptlaptop\documents\codeblock\spacetravel\game.cpp
+	"Game.h"
+
+1709285346 c:\users\pc-fptlaptop\documents\codeblock\spacetravel\game.h
+	"GameConstants.h"
+	<SDL.h>
+
