@@ -35,8 +35,10 @@
 		<Unit filename="Game.cpp" />
 		<Unit filename="Game.h" />
 		<Unit filename="GameConstants.h" />
-		<Unit filename="InitGame.h" />
+		<Unit filename="Object.cpp" />
 		<Unit filename="Object.h" />
+		<Unit filename="SpaceShip.h" />
+		<Unit filename="Spaceship.cpp" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
