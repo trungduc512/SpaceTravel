@@ -14,6 +14,7 @@ public:
     void NewGame();
     void Run();
     void HandleInput();
+    void KeepInScreen(SpaceShip *Spaceship);
     void Quit();
 
 private:

@@ -17,9 +17,9 @@ public:
 	void moveDown();
 
 private:
-    SDL_Rect mainColliderRect;
-	SDL_Rect leftColliderRect;
-	SDL_Rect rightColliderRect;
+    SDL_Rect mainHitbox;
+	SDL_Rect leftHitbox;
+	SDL_Rect rightHitbox;
 };
 
 #endif // SPACESHIP_H_INCLUDED

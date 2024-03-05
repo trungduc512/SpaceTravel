@@ -41,6 +41,7 @@ void Game::Run()
 
         }
         HandleInput();
+        KeepInScreen(Spaceship);
         Render();
     }
     delete Spaceship;
@@ -69,6 +70,13 @@ void Game::HandleInput()
 	}
 }
 
+void Game::KeepInScreen(SpaceShip *Spaceship)
+{
+    if(Spaceship->x < 0) Spaceship->x = 0;
+    if(Spaceship->x + Spaceship->width > SCREEN_WIDTH) Spaceship->x = SCREEN_WIDTH - Spaceship->width;
+    if(Spaceship->y < 0) Spaceship->y = 0;
+    if(Spaceship->y + Spaceship->height > SCREEN_HEIGHT) Spaceship->y = SCREEN_HEIGHT - Spaceship->height;
+}
 void Game::Quit()
 {
     SDL_DestroyWindow( window );
