@@ -3,7 +3,7 @@
 
 #include <SDL.h>
 
-void setSizeForHitbox(SDL_Rect &rect, float x, float y, float w, float h)
+void setRectSize(SDL_Rect &rect, float x, float y, float w, float h)
 {
     rect.x = x;
     rect.y = y;
