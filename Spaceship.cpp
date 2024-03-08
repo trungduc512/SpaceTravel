@@ -1,5 +1,4 @@
 #include "SpaceShip.h"
-#include "UsefulFunctions.h"
 
 SpaceShip::SpaceShip(SDL_Renderer* renderer):Object(renderer)
 {

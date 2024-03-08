@@ -32,13 +32,18 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="Asteroid.cpp" />
+		<Unit filename="Asteroid.h" />
 		<Unit filename="Game.cpp" />
 		<Unit filename="Game.h" />
 		<Unit filename="GameConstants.h" />
+		<Unit filename="MovingObject.cpp" />
+		<Unit filename="MovingObject.h" />
 		<Unit filename="Object.cpp" />
 		<Unit filename="Object.h" />
 		<Unit filename="SpaceShip.h" />
 		<Unit filename="Spaceship.cpp" />
+		<Unit filename="UsefulFunctions.cpp" />
 		<Unit filename="UsefulFunctions.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>

@@ -2,6 +2,7 @@
 #define OBJECT_H_INCLUDED
 
 #include <SDL_image.h>
+#include "UsefulFunctions.h"
 
 class Object
 {

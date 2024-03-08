@@ -20,12 +20,18 @@ void Game::NewGame()
 {
 //	delete Spaceship; // this is use only to create new game
 	Spaceship = new SpaceShip(renderer);
+	frame = 0;
+	asteroidSpawnRate = 25;
 }
 void Game::Render()
 {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
     SDL_RenderClear(renderer);
     Spaceship->Render();
+    std::list<Asteroid*>::iterator it;
+    for(it = asteroidList.begin(); it != asteroidList.end(); it++){
+        (*it)->Render();
+    }
     SDL_RenderPresent(renderer);
 }
 
@@ -40,14 +46,25 @@ void Game::Run()
             if( event.type == SDL_QUIT ) quit = true;
 
         }
-        HandleInput();
-        KeepInScreen(Spaceship);
+        Update();
         Render();
+        frame++;
+        std::cout << frame << std::endl;
     }
     delete Spaceship;
     Quit();
 }
 
+void Game::Update()
+{
+    HandleInput();
+    if(frame % asteroidSpawnRate == 0){
+        asteroid = new Asteroid(renderer);
+		asteroidList.push_back(asteroid);
+    }
+    KeepInScreen(Spaceship);
+    IterateThroughList();
+}
 void Game::HandleInput()
 {
     //default have only 2 movements (left & right)
@@ -77,6 +94,23 @@ void Game::KeepInScreen(SpaceShip *Spaceship)
     if(Spaceship->y < 0) Spaceship->y = 0;
     if(Spaceship->y + Spaceship->height > SCREEN_HEIGHT) Spaceship->y = SCREEN_HEIGHT - Spaceship->height;
 }
+
+void Game::IterateThroughList()
+{
+    std::list<Asteroid*>::iterator currentAsteroid;
+	for (currentAsteroid = asteroidList.begin(); currentAsteroid != asteroidList.end(); currentAsteroid++)
+	{
+		//Check if asteroid is off screen
+		if ((*currentAsteroid)->Box.y > SCREEN_HEIGHT)
+		{
+			delete(*currentAsteroid);
+			currentAsteroid++;
+			asteroidList.erase(asteroidList.begin());
+		}
+		(*currentAsteroid)->Update();
+	}
+}
+
 void Game::Quit()
 {
     SDL_DestroyWindow( window );
