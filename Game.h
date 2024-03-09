@@ -31,6 +31,7 @@ private:
     Asteroid* asteroid;
     unsigned int frame;
     unsigned int asteroidSpawnRate;
+    unsigned int livesLeft;
 };
 
 #endif // GAME_H_INCLUDED

@@ -22,6 +22,7 @@ void Game::NewGame()
 	Spaceship = new SpaceShip(renderer);
 	frame = 0;
 	asteroidSpawnRate = 25;
+	livesLeft = 3;
 	if(!asteroidList.empty()){
         asteroidList.erase(asteroidList.begin(),asteroidList.end());
 	}
@@ -38,11 +39,13 @@ void Game::Render()
         //check collision
         if((*currentAsteroid)->isCollided(Spaceship->getLeftHitBox(), Spaceship->getRightHitBox(), Spaceship->getMainHitBox())){
             currentAsteroid = asteroidList.erase(currentAsteroid);
-            //loop the game
-            NewGame();
+            livesLeft--;
 		}
 		else
             currentAsteroid++;
+    }
+    if(livesLeft == 0){
+        NewGame();
     }
     SDL_RenderPresent(renderer);
 }
@@ -120,9 +123,6 @@ void Game::IterateThroughList()
 			currentAsteroid++;
 			asteroidList.erase(asteroidList.begin());
 		}
-//		if((*currentAsteroid)->isCollided(Spaceship->getLeftHitBox(), Spaceship->getRightHitBox(), Spaceship->getMainHitBox())){
-//            currentAsteroid = asteroidList.erase(currentAsteroid);
-//		}
 		(*currentAsteroid)->Update();
 	}
 }
