@@ -33,9 +33,13 @@ void Game::Render()
     Spaceship->Render();
     std::list<Asteroid*>::iterator currentAsteroid;
     for(currentAsteroid = asteroidList.begin(); currentAsteroid != asteroidList.end();){
+        //render asteroid
         (*currentAsteroid)->Render();
+        //check collision
         if((*currentAsteroid)->isCollided(Spaceship->getLeftHitBox(), Spaceship->getRightHitBox(), Spaceship->getMainHitBox())){
             currentAsteroid = asteroidList.erase(currentAsteroid);
+            //loop the game
+            NewGame();
 		}
 		else
             currentAsteroid++;
