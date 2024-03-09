@@ -22,15 +22,23 @@ void Game::NewGame()
 	Spaceship = new SpaceShip(renderer);
 	frame = 0;
 	asteroidSpawnRate = 25;
+	if(!asteroidList.empty()){
+        asteroidList.erase(asteroidList.begin(),asteroidList.end());
+	}
 }
 void Game::Render()
 {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
     SDL_RenderClear(renderer);
     Spaceship->Render();
-    std::list<Asteroid*>::iterator it;
-    for(it = asteroidList.begin(); it != asteroidList.end(); it++){
-        (*it)->Render();
+    std::list<Asteroid*>::iterator currentAsteroid;
+    for(currentAsteroid = asteroidList.begin(); currentAsteroid != asteroidList.end();){
+        (*currentAsteroid)->Render();
+        if((*currentAsteroid)->isCollided(Spaceship->getLeftHitBox(), Spaceship->getRightHitBox(), Spaceship->getMainHitBox())){
+            currentAsteroid = asteroidList.erase(currentAsteroid);
+		}
+		else
+            currentAsteroid++;
     }
     SDL_RenderPresent(renderer);
 }
@@ -51,6 +59,7 @@ void Game::Run()
         frame++;
         //debug
         std::cout << frame << std::endl;
+        std::cout << asteroidList.size() << std::endl;
     }
     delete Spaceship;
     Quit();
@@ -107,9 +116,9 @@ void Game::IterateThroughList()
 			currentAsteroid++;
 			asteroidList.erase(asteroidList.begin());
 		}
-		if((*currentAsteroid)->isCollided(Spaceship->getLeftHitBox(), Spaceship->getRightHitBox(), Spaceship->getMainHitBox())){
-            currentAsteroid = asteroidList.erase(currentAsteroid);
-		}
+//		if((*currentAsteroid)->isCollided(Spaceship->getLeftHitBox(), Spaceship->getRightHitBox(), Spaceship->getMainHitBox())){
+//            currentAsteroid = asteroidList.erase(currentAsteroid);
+//		}
 		(*currentAsteroid)->Update();
 	}
 }
