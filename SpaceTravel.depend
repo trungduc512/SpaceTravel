@@ -14,7 +14,7 @@
 	"GameConstants.h"
 	<SDL.h>
 
-1709914706 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\game.cpp
+1710007035 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\game.cpp
 	"Game.h"
 
 1709914838 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\game.h
@@ -37,11 +37,11 @@
 	<SDL_image.h>
 	"UsefulFunctions.h"
 
-1709720459 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\spaceship.h
+1710008896 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\spaceship.h
 	"Object.h"
 	"GameConstants.h"
 
-1709720244 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\spaceship.cpp
+1710009003 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\spaceship.cpp
 	"SpaceShip.h"
 
 1709720417 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\usefulfunctions.h
@@ -56,10 +56,10 @@
 	<time.h>
 	<stdlib.h>
 
-1709913188 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\asteroid.cpp
+1710008930 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\asteroid.cpp
 	"Asteroid.h"
 
-1709912956 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\asteroid.h
+1710008390 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\asteroid.h
 	"MovingObject.h"
 
 1709720419 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\usefulfunctions.cpp

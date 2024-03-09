@@ -44,3 +44,18 @@ void SpaceShip::moveRight()
 {
     x += 10;
 }
+
+SDL_Rect* SpaceShip::getLeftHitBox()
+{
+    return &leftHitbox;
+}
+
+SDL_Rect* SpaceShip::getRightHitBox()
+{
+    return &rightHitbox;
+}
+
+SDL_Rect* SpaceShip::getMainHitBox()
+{
+    return &mainHitbox;
+}

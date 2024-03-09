@@ -15,6 +15,9 @@ public:
 	void moveRight();
 	void moveUp();
 	void moveDown();
+	SDL_Rect* getLeftHitBox();
+	SDL_Rect* getRightHitBox();
+	SDL_Rect* getMainHitBox();
 
 private:
     SDL_Rect mainHitbox;

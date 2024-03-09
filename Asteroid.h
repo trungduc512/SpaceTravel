@@ -11,6 +11,7 @@ public:
 
     void Render();
     void Update();
+    bool isCollided(const SDL_Rect* leftHitBox, const SDL_Rect* rightHitBox, const SDL_Rect* mainHitBox);
 private:
     SDL_Rect Hitbox;
 };

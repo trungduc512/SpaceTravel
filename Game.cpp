@@ -49,6 +49,7 @@ void Game::Run()
         Update();
         Render();
         frame++;
+        //debug
         std::cout << frame << std::endl;
     }
     delete Spaceship;
@@ -67,7 +68,6 @@ void Game::Update()
 }
 void Game::HandleInput()
 {
-    //default have only 2 movements (left & right)
 	const Uint8* currentKeyState = SDL_GetKeyboardState(NULL);
 	if (currentKeyState[SDL_SCANCODE_A] || currentKeyState[SDL_SCANCODE_LEFT])
 	{
@@ -106,6 +106,9 @@ void Game::IterateThroughList()
 			delete(*currentAsteroid);
 			currentAsteroid++;
 			asteroidList.erase(asteroidList.begin());
+		}
+		if((*currentAsteroid)->isCollided(Spaceship->getLeftHitBox(), Spaceship->getRightHitBox(), Spaceship->getMainHitBox())){
+            currentAsteroid = asteroidList.erase(currentAsteroid);
 		}
 		(*currentAsteroid)->Update();
 	}

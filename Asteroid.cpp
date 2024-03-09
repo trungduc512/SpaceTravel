@@ -25,6 +25,14 @@ void Asteroid::Render()
 	SDL_RenderDrawRect(renderer, &Hitbox);
 }
 
+bool Asteroid::isCollided(const SDL_Rect* leftHitBox, const SDL_Rect* rightHitBox, const SDL_Rect* mainHitBox)
+{
+    if(SDL_HasIntersection(&Hitbox, leftHitBox)) return true;
+    if(SDL_HasIntersection(&Hitbox, rightHitBox)) return true;
+    if(SDL_HasIntersection(&Hitbox, mainHitBox)) return true;
+    return false;
+}
+
 Asteroid::~Asteroid()
 {
 }
