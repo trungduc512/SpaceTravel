@@ -1,11 +1,17 @@
 #include "SpaceShip.h"
 
-SpaceShip::SpaceShip(SDL_Renderer* renderer):Object(renderer)
+SpaceShip::SpaceShip(SDL_Renderer* renderer, std::string path):Object(renderer)
 {
-	x = (SCREEN_WIDTH / 2) - 50; //- (renderRect.w / 2);
+    SDL_Surface* newSurface = IMG_Load(path.c_str());
+    SDL_SetColorKey (newSurface, SDL_TRUE, SDL_MapRGB(newSurface->format, 69, 69, 69));
+    texture = SDL_CreateTextureFromSurface(renderer, newSurface);
+    //get the spaceship to the middle of the screen
+    renderBox.w = newSurface->w;
+    SDL_FreeSurface(newSurface);
+	x = (SCREEN_WIDTH / 2) - (renderBox.w / 2);
 	y = SCREEN_HEIGHT * 0.80;
-	width = 100;
-	height = 100;
+	width = 85;
+	height = 85;
 }
 
 SpaceShip::~SpaceShip()
@@ -14,9 +20,11 @@ SpaceShip::~SpaceShip()
 
 void SpaceShip::Render()
 {
-    setRectSize(mainHitbox, x + 25, y, 50, height);
-    setRectSize(leftHitbox, x, y + 50, 25, 40);
-    setRectSize(rightHitbox, x + 75, y + 50, 25, 40);
+    SDL_RenderCopy(renderer, texture, NULL, &renderBox);
+    setRectSize(renderBox, x, y, width, height);
+    setRectSize(mainHitbox, x + 30, y, 25, 85);
+    setRectSize(leftHitbox, x, y + 40, 30, 35);
+    setRectSize(rightHitbox, x + 55, y + 40, 30, 35);
 
 //	Render Hitbox (for bug fixing only)
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);

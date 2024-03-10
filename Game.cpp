@@ -18,8 +18,7 @@ bool Game::Init()
 
 void Game::NewGame()
 {
-//	delete Spaceship; // this is use only to create new game
-	Spaceship = new SpaceShip(renderer);
+	Spaceship = new SpaceShip(renderer,"image/spaceship.png");
 	frame = 0;
 	asteroidSpawnRate = 25;
 	livesLeft = 3;

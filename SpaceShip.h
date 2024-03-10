@@ -3,11 +3,12 @@
 
 #include "Object.h"
 #include "GameConstants.h"
+#include <string>
 
 class SpaceShip : public Object
 {
 public:
-    SpaceShip(SDL_Renderer* renderer);
+    SpaceShip(SDL_Renderer* renderer, std::string path);
     ~SpaceShip();
 
     void Render();
@@ -20,6 +21,8 @@ public:
 	SDL_Rect* getMainHitBox();
 
 private:
+    SDL_Texture* texture;
+    SDL_Rect renderBox;
     SDL_Rect mainHitbox;
 	SDL_Rect leftHitbox;
 	SDL_Rect rightHitbox;
