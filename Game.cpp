@@ -9,6 +9,7 @@ Game::Game()
 
 bool Game::Init()
 {
+    srand(time(NULL));
     SDL_Init(SDL_INIT_VIDEO);
     window = SDL_CreateWindow( "test", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
     if( window == NULL ) return false;
@@ -19,7 +20,7 @@ bool Game::Init()
 
 void Game::NewGame()
 {
-	Spaceship = new SpaceShip(renderer,"image/spaceship.png");
+	Spaceship = new SpaceShip(renderer,"image/spaceship.png", "image/engine_flame.png");
 	frame = 0;
 	asteroidSpawnRate = 25;
 	livesLeft = 3;
@@ -31,7 +32,7 @@ void Game::Render()
 {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
     SDL_RenderClear(renderer);
-    Spaceship->Render();
+
     std::list<Asteroid*>::iterator currentAsteroid = asteroidList.begin();
     while (currentAsteroid != asteroidList.end()){
         //render asteroid
@@ -40,15 +41,13 @@ void Game::Render()
         if((*currentAsteroid)->isCollided(Spaceship->getLeftHitBox(), Spaceship->getRightHitBox(), Spaceship->getMainHitBox())){
             // erase returns the iterator following the last removed element
             currentAsteroid = asteroidList.erase(currentAsteroid);
+//            livesLeft--;
         }
         else {
             ++currentAsteroid;
         }
     }
-
-    if(livesLeft == 0){
-        NewGame();
-    }
+    Spaceship->Render(frame);
     SDL_RenderPresent(renderer);
 }
 
@@ -77,6 +76,10 @@ void Game::Run()
 void Game::Update()
 {
     HandleInput();
+    if(livesLeft == 0){
+        SDL_Delay(1000);
+        NewGame();
+    }
     if(frame % asteroidSpawnRate == 0){
         asteroid = new Asteroid(renderer);
 		asteroidList.push_back(asteroid);
@@ -105,12 +108,12 @@ void Game::HandleInput()
 	}
 }
 
-void Game::KeepInScreen(SpaceShip *Spaceship)
+void Game::KeepInScreen(Object* object)
 {
-    if(Spaceship->x < 0) Spaceship->x = 0;
-    if(Spaceship->x + Spaceship->width > SCREEN_WIDTH) Spaceship->x = SCREEN_WIDTH - Spaceship->width;
-    if(Spaceship->y < 0) Spaceship->y = 0;
-    if(Spaceship->y + Spaceship->height > SCREEN_HEIGHT) Spaceship->y = SCREEN_HEIGHT - Spaceship->height;
+    if(object->x < 0) object->x = 0;
+    if(object->x + object->width > SCREEN_WIDTH) object->x = SCREEN_WIDTH - object->width;
+    if(object->y < 0) object->y = 0;
+    if(object->y + object->height > SCREEN_HEIGHT) object->y = SCREEN_HEIGHT - object->height;
 }
 
 void Game::IterateThroughList()

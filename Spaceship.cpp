@@ -1,13 +1,20 @@
 #include "SpaceShip.h"
 
-SpaceShip::SpaceShip(SDL_Renderer* renderer, std::string path):Object(renderer)
+SpaceShip::SpaceShip(SDL_Renderer* renderer, std::string path1, std::string path2):Object(renderer)
 {
-    SDL_Surface* newSurface = IMG_Load(path.c_str());
-    SDL_SetColorKey (newSurface, SDL_TRUE, SDL_MapRGB(newSurface->format, 69, 69, 69));
-    texture = SDL_CreateTextureFromSurface(renderer, newSurface);
+    //get ship image
+    SDL_Surface* shipSurface = IMG_Load(path1.c_str());
+    SDL_SetColorKey (shipSurface, SDL_TRUE, SDL_MapRGB(shipSurface->format, 69, 69, 69));
+    shipTexture = SDL_CreateTextureFromSurface(renderer, shipSurface);
+    //get flame spritesheet
+    SDL_Surface*  flameSurface = IMG_Load(path2.c_str());
+    SDL_SetColorKey (flameSurface, SDL_TRUE, SDL_MapRGB(flameSurface->format, 69, 69, 69));
+    flameTexture = SDL_CreateTextureFromSurface(renderer, flameSurface);
     //get the spaceship to the middle of the screen
-    renderBox.w = newSurface->w;
-    SDL_FreeSurface(newSurface);
+    renderBox.w = shipSurface->w;
+    renderBox.h = shipSurface->h;
+    SDL_FreeSurface(shipSurface);
+    SDL_FreeSurface(flameSurface);
 	x = (SCREEN_WIDTH / 2) - (renderBox.w / 2);
 	y = SCREEN_HEIGHT * 0.80;
 	width = 85;
@@ -16,22 +23,27 @@ SpaceShip::SpaceShip(SDL_Renderer* renderer, std::string path):Object(renderer)
 
 SpaceShip::~SpaceShip()
 {
-    SDL_DestroyTexture(texture);
+    SDL_DestroyTexture(shipTexture);
+    SDL_DestroyTexture(flameTexture);
 }
 
-void SpaceShip::Render()
+void SpaceShip::Render(unsigned int frame)
 {
-    SDL_RenderCopy(renderer, texture, NULL, &renderBox);
-    setRectSize(renderBox, x, y, width, height);
+    setRectSize(renderBox, x, y , width, height);
+    setRectSize(flame, x + 30, y + 80, 25, 40);
+    setRectSize(clipBox, 140.0*(frame%8), 0, 140, 260);
+    SDL_RenderCopy(renderer, shipTexture, NULL, &renderBox);
+    SDL_RenderCopy(renderer, flameTexture, &clipBox, &flame);
     setRectSize(mainHitbox, x + 30, y, 25, 85);
     setRectSize(leftHitbox, x, y + 40, 30, 35);
     setRectSize(rightHitbox, x + 55, y + 40, 30, 35);
 
 //	Render Hitbox (for bug fixing only)
-	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-	SDL_RenderDrawRect(renderer, &leftHitbox);
-	SDL_RenderDrawRect(renderer, &mainHitbox);
-	SDL_RenderDrawRect(renderer, &rightHitbox);
+//	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+//	SDL_RenderDrawRect(renderer, &flame);
+//	SDL_RenderDrawRect(renderer, &leftHitbox);
+//	SDL_RenderDrawRect(renderer, &mainHitbox);
+//	SDL_RenderDrawRect(renderer, &rightHitbox);
 }
 
 void SpaceShip::moveUp()

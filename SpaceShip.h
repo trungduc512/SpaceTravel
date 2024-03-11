@@ -8,10 +8,10 @@
 class SpaceShip : public Object
 {
 public:
-    SpaceShip(SDL_Renderer* renderer, std::string path);
+    SpaceShip(SDL_Renderer* renderer, std::string path1, std::string path2);
     ~SpaceShip();
 
-    void Render();
+    void Render(unsigned int frames);
     void moveLeft();
 	void moveRight();
 	void moveUp();
@@ -21,8 +21,11 @@ public:
 	SDL_Rect* getMainHitBox();
 
 private:
-    SDL_Texture* texture;
+    SDL_Texture* shipTexture;
+    SDL_Texture* flameTexture;
     SDL_Rect renderBox;
+    SDL_Rect flame;
+    SDL_Rect clipBox;
     SDL_Rect mainHitbox;
 	SDL_Rect leftHitbox;
 	SDL_Rect rightHitbox;

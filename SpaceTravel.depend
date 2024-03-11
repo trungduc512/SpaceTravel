@@ -14,10 +14,10 @@
 	"GameConstants.h"
 	<SDL.h>
 
-1710165836 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\game.cpp
+1710182774 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\game.cpp
 	"Game.h"
 
-1710012531 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\game.h
+1710176691 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\game.h
 	"GameConstants.h"
 	"SpaceShip.h"
 	"Asteroid.h"
@@ -25,7 +25,7 @@
 	<iostream>
 	<list>
 
-1709167867 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\gameconstants.h
+1710177300 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\gameconstants.h
 
 1709912601 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\main.cpp
 	"Game.h"
@@ -37,27 +37,27 @@
 	<SDL_image.h>
 	"UsefulFunctions.h"
 
-1710087598 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\spaceship.h
+1710182790 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\spaceship.h
 	"Object.h"
 	"GameConstants.h"
 	<string>
 
-1710089160 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\spaceship.cpp
+1710182875 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\spaceship.cpp
 	"SpaceShip.h"
 
-1709720417 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\usefulfunctions.h
+1710172135 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\usefulfunctions.h
 	<SDL.h>
 
 1709716857 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\movingobject.cpp
 	"MovingObject.h"
 
-1709716875 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\movingobject.h
+1710172123 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\movingobject.h
 	"Object.h"
 	"GameConstants.h"
 	<time.h>
 	<stdlib.h>
 
-1710165753 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\asteroid.cpp
+1710176044 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\asteroid.cpp
 	"Asteroid.h"
 
 1710008390 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\asteroid.h

@@ -18,7 +18,7 @@ public:
     void Run();
     void Update();
     void HandleInput();
-    void KeepInScreen(SpaceShip *Spaceship);
+    void KeepInScreen(Object* object);
     void IterateThroughList();
     void Quit();
 
