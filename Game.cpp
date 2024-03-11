@@ -4,6 +4,7 @@ Game::Game()
 {
     window = NULL;
     renderer = NULL;
+    Spaceship = NULL;
 }
 
 bool Game::Init()
@@ -31,18 +32,20 @@ void Game::Render()
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
     SDL_RenderClear(renderer);
     Spaceship->Render();
-    std::list<Asteroid*>::iterator currentAsteroid;
-    for(currentAsteroid = asteroidList.begin(); currentAsteroid != asteroidList.end();){
+    std::list<Asteroid*>::iterator currentAsteroid = asteroidList.begin();
+    while (currentAsteroid != asteroidList.end()){
         //render asteroid
         (*currentAsteroid)->Render();
         //check collision
         if((*currentAsteroid)->isCollided(Spaceship->getLeftHitBox(), Spaceship->getRightHitBox(), Spaceship->getMainHitBox())){
+            // erase returns the iterator following the last removed element
             currentAsteroid = asteroidList.erase(currentAsteroid);
-            livesLeft--;
-		}
-		else
-            currentAsteroid++;
+        }
+        else {
+            ++currentAsteroid;
+        }
     }
+
     if(livesLeft == 0){
         NewGame();
     }
@@ -57,7 +60,7 @@ void Game::Run()
     {
         if( SDL_PollEvent( &event ) != 0)
         {
-            if( event.type == SDL_QUIT ) quit = true;
+            if( event.type == SDL_QUIT || event.key.keysym.sym == SDLK_ESCAPE ) quit = true;
 
         }
         Update();
@@ -112,18 +115,20 @@ void Game::KeepInScreen(SpaceShip *Spaceship)
 
 void Game::IterateThroughList()
 {
-    std::list<Asteroid*>::iterator currentAsteroid;
-	for (currentAsteroid = asteroidList.begin(); currentAsteroid != asteroidList.end(); currentAsteroid++)
-	{
-		//Check if asteroid is off screen
-		if ((*currentAsteroid)->Box.y > SCREEN_HEIGHT)
-		{
-			delete(*currentAsteroid);
-			currentAsteroid++;
-			asteroidList.erase(asteroidList.begin());
-		}
-		(*currentAsteroid)->Update();
-	}
+    std::list<Asteroid*>::iterator currentAsteroid = asteroidList.begin();
+    while (currentAsteroid != asteroidList.end()){
+        //Check if asteroid is off screen
+        if ((*currentAsteroid)->Box.y > SCREEN_HEIGHT)
+        {
+            delete(*currentAsteroid);
+            // erase returns the iterator following the last removed element
+            currentAsteroid = asteroidList.erase(currentAsteroid);
+        }
+        else {
+            (*currentAsteroid)->Update();
+            ++currentAsteroid;
+        }
+    }
 }
 
 void Game::Quit()

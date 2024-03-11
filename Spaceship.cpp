@@ -16,6 +16,7 @@ SpaceShip::SpaceShip(SDL_Renderer* renderer, std::string path):Object(renderer)
 
 SpaceShip::~SpaceShip()
 {
+    SDL_DestroyTexture(texture);
 }
 
 void SpaceShip::Render()

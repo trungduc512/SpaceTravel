@@ -8,6 +8,10 @@ Asteroid::Asteroid(SDL_Renderer *renderer) : MovingObject(renderer)
     setRectSize(Box, x, y, 80, 80);
 }
 
+Asteroid::~Asteroid()
+{
+}
+
 void Asteroid::Update()
 {
 	Box.y += moveSpeed;
@@ -31,8 +35,4 @@ bool Asteroid::isCollided(const SDL_Rect* leftHitBox, const SDL_Rect* rightHitBo
     if(SDL_HasIntersection(&Hitbox, rightHitBox)) return true;
     if(SDL_HasIntersection(&Hitbox, mainHitBox)) return true;
     return false;
-}
-
-Asteroid::~Asteroid()
-{
 }
