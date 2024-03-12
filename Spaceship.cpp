@@ -13,10 +13,13 @@ SpaceShip::SpaceShip(SDL_Renderer* renderer, std::string path1, std::string path
     //get the spaceship to the middle of the screen
     renderBox.w = shipSurface->w;
     renderBox.h = shipSurface->h;
+    //free unused surface
     SDL_FreeSurface(shipSurface);
     SDL_FreeSurface(flameSurface);
+    //set initial position for the spaceship
 	x = (SCREEN_WIDTH / 2) - (renderBox.w / 2);
 	y = SCREEN_HEIGHT * 0.80;
+	//set width and height for the image
 	width = 85;
 	height = 85;
 }
@@ -31,7 +34,7 @@ void SpaceShip::Render(unsigned int frame)
 {
     setRectSize(renderBox, x, y , width, height);
     setRectSize(flame, x + 30, y + 80, 25, 40);
-    setRectSize(clipBox, 140.0*(frame%8), 0, 140, 260);
+    setRectSize(clipBox, 140.0*((frame / 5)%8), 0, 140, 260);
     SDL_RenderCopy(renderer, shipTexture, NULL, &renderBox);
     SDL_RenderCopy(renderer, flameTexture, &clipBox, &flame);
     setRectSize(mainHitbox, x + 30, y, 25, 85);

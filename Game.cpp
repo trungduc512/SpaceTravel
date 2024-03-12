@@ -22,29 +22,31 @@ void Game::NewGame()
 {
 	Spaceship = new SpaceShip(renderer,"image/spaceship.png", "image/engine_flame.png");
 	frame = 0;
-	asteroidSpawnRate = 25;
+	obstaclesSpawnRate = 25; // minimum rate is 1 per 3 frames
 	livesLeft = 3;
-	if(!asteroidList.empty()){
-        asteroidList.erase(asteroidList.begin(),asteroidList.end());
+	if(!obstaclesList.empty()){
+        obstaclesList.erase(obstaclesList.begin(),obstaclesList.end());
 	}
 }
 void Game::Render()
 {
+    //set color for the window
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+
     SDL_RenderClear(renderer);
 
-    std::list<Asteroid*>::iterator currentAsteroid = asteroidList.begin();
-    while (currentAsteroid != asteroidList.end()){
+    std::list<Obstacles*>::iterator currentObstacle = obstaclesList.begin();
+    while (currentObstacle != obstaclesList.end()){
         //render asteroid
-        (*currentAsteroid)->Render();
+        (*currentObstacle)->Render();
         //check collision
-        if((*currentAsteroid)->isCollided(Spaceship->getLeftHitBox(), Spaceship->getRightHitBox(), Spaceship->getMainHitBox())){
+        if((*currentObstacle)->isCollided(Spaceship->getLeftHitBox(), Spaceship->getRightHitBox(), Spaceship->getMainHitBox())){
             // erase returns the iterator following the last removed element
-            currentAsteroid = asteroidList.erase(currentAsteroid);
+            currentObstacle = obstaclesList.erase(currentObstacle);
 //            livesLeft--;
         }
         else {
-            ++currentAsteroid;
+            ++currentObstacle;
         }
     }
     Spaceship->Render(frame);
@@ -67,7 +69,7 @@ void Game::Run()
         frame++;
         //debug
         std::cout << frame << std::endl;
-        std::cout << asteroidList.size() << std::endl;
+        std::cout << obstaclesList.size() << std::endl;
     }
     delete Spaceship;
     Quit();
@@ -80,9 +82,9 @@ void Game::Update()
         SDL_Delay(1000);
         NewGame();
     }
-    if(frame % asteroidSpawnRate == 0){
-        asteroid = new Asteroid(renderer);
-		asteroidList.push_back(asteroid);
+    if(frame % obstaclesSpawnRate == 0){
+        obstacle = new Obstacles(renderer);
+		obstaclesList.push_back(obstacle);
     }
     KeepInScreen(Spaceship);
     IterateThroughList();
@@ -118,18 +120,18 @@ void Game::KeepInScreen(Object* object)
 
 void Game::IterateThroughList()
 {
-    std::list<Asteroid*>::iterator currentAsteroid = asteroidList.begin();
-    while (currentAsteroid != asteroidList.end()){
+    std::list<Obstacles*>::iterator currentObstacle = obstaclesList.begin();
+    while (currentObstacle != obstaclesList.end()){
         //Check if asteroid is off screen
-        if ((*currentAsteroid)->Box.y > SCREEN_HEIGHT)
+        if ((*currentObstacle)->Box.y > SCREEN_HEIGHT)
         {
-            delete(*currentAsteroid);
+            delete(*currentObstacle);
             // erase returns the iterator following the last removed element
-            currentAsteroid = asteroidList.erase(currentAsteroid);
+            currentObstacle = obstaclesList.erase(currentObstacle);
         }
         else {
-            (*currentAsteroid)->Update();
-            ++currentAsteroid;
+            (*currentObstacle)->Update();
+            ++currentObstacle;
         }
     }
 }

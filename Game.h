@@ -3,7 +3,7 @@
 
 #include "GameConstants.h"
 #include "SpaceShip.h"
-#include "Asteroid.h"
+#include "Obstacles.h"
 #include <SDL.h>
 #include <iostream>
 #include <list>
@@ -27,10 +27,10 @@ private:
     SDL_Window* window;
     SDL_Event event;
     SpaceShip* Spaceship;
-    std::list<Asteroid*> asteroidList;
-    Asteroid* asteroid;
+    std::list<Obstacles*> obstaclesList;
+    Obstacles* obstacle;
     unsigned int frame;
-    unsigned int asteroidSpawnRate;
+    unsigned int obstaclesSpawnRate;
     unsigned int livesLeft;
 };
 

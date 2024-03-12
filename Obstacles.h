@@ -2,18 +2,22 @@
 #define ASTEROID_H_INCLUDED
 
 #include "MovingObject.h"
+#include <iostream>
 
-class Asteroid : public MovingObject
+class Obstacles : public MovingObject
 {
 public:
-    Asteroid(SDL_Renderer *renderer);
-    ~Asteroid();
+    Obstacles(SDL_Renderer *renderer);
+    ~Obstacles();
 
     void Render();
     void Update();
     bool isCollided(const SDL_Rect* leftHitBox, const SDL_Rect* rightHitBox, const SDL_Rect* mainHitBox);
+    void getRandomImage();
 private:
     SDL_Rect Hitbox;
+    SDL_Texture* texture;
+    std::string path;
 };
 
 
