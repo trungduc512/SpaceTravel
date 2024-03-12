@@ -4,6 +4,7 @@
 #include "GameConstants.h"
 #include "SpaceShip.h"
 #include "Obstacles.h"
+#include "Coin.h"
 #include <SDL.h>
 #include <iostream>
 #include <list>
@@ -28,9 +29,12 @@ private:
     SDL_Event event;
     SpaceShip* Spaceship;
     std::list<Obstacles*> obstaclesList;
+    std::list<Coin*> coinList;
     Obstacles* obstacle;
+    Coin* coin;
     unsigned int frame;
     unsigned int obstaclesSpawnRate;
+    unsigned int coinSpawnRate;
     unsigned int livesLeft;
 };
 

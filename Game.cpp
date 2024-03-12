@@ -23,9 +23,13 @@ void Game::NewGame()
 	Spaceship = new SpaceShip(renderer,"image/spaceship.png", "image/engine_flame.png");
 	frame = 0;
 	obstaclesSpawnRate = 25; // minimum rate is 1 per 3 frames
+	coinSpawnRate = 80;
 	livesLeft = 3;
 	if(!obstaclesList.empty()){
         obstaclesList.erase(obstaclesList.begin(),obstaclesList.end());
+	}
+    if(!coinList.empty()){
+        coinList.erase(coinList.begin(),coinList.end());
 	}
 }
 void Game::Render()
@@ -35,6 +39,7 @@ void Game::Render()
 
     SDL_RenderClear(renderer);
 
+    //iterate through obstacles list
     std::list<Obstacles*>::iterator currentObstacle = obstaclesList.begin();
     while (currentObstacle != obstaclesList.end()){
         //render asteroid
@@ -47,6 +52,21 @@ void Game::Render()
         }
         else {
             ++currentObstacle;
+        }
+    }
+
+    //iterate through coin list
+    std::list<Coin*>::iterator currentCoin = coinList.begin();
+    while (currentCoin != coinList.end()){
+        //render asteroid
+        (*currentCoin)->Render(frame);
+        //check collision
+        if((*currentCoin)->isCollided(Spaceship->getLeftHitBox(), Spaceship->getRightHitBox(), Spaceship->getMainHitBox())){
+            // erase returns the iterator following the last removed element
+            currentCoin = coinList.erase(currentCoin);
+        }
+        else {
+            ++currentCoin;
         }
     }
     Spaceship->Render(frame);
@@ -86,6 +106,11 @@ void Game::Update()
         obstacle = new Obstacles(renderer);
 		obstaclesList.push_back(obstacle);
     }
+
+    if(frame % coinSpawnRate == 0){
+        coin = new Coin(renderer, "image/coin.png");
+		coinList.push_back(coin);
+    }
     KeepInScreen(Spaceship);
     IterateThroughList();
 }
@@ -122,7 +147,7 @@ void Game::IterateThroughList()
 {
     std::list<Obstacles*>::iterator currentObstacle = obstaclesList.begin();
     while (currentObstacle != obstaclesList.end()){
-        //Check if asteroid is off screen
+        //Check if obstacle is off screen
         if ((*currentObstacle)->Box.y > SCREEN_HEIGHT)
         {
             delete(*currentObstacle);
@@ -132,6 +157,20 @@ void Game::IterateThroughList()
         else {
             (*currentObstacle)->Update();
             ++currentObstacle;
+        }
+    }
+    std::list<Coin*>::iterator currentCoin = coinList.begin();
+    while (currentCoin != coinList.end()){
+        //Check if coin is off screen
+        if ((*currentCoin)->Box.y > SCREEN_HEIGHT)
+        {
+            delete(*currentCoin);
+            // erase returns the iterator following the last removed element
+            currentCoin = coinList.erase(currentCoin);
+        }
+        else {
+            (*currentCoin)->Update();
+            ++currentCoin;
         }
     }
 }
