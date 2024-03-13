@@ -34,7 +34,7 @@ void SpaceShip::Render(unsigned int frame)
 {
     setRectSize(renderBox, x, y , width, height);
     setRectSize(flame, x + 30, y + 80, 25, 40);
-    setRectSize(clipBox, 140.0*((frame / 5)%8), 0, 140, 260);
+    setRectSize(clipBox, 140*((frame/5)%8), 0, 140, 260);
     SDL_RenderCopy(renderer, shipTexture, NULL, &renderBox);
     SDL_RenderCopy(renderer, flameTexture, &clipBox, &flame);
     setRectSize(mainHitbox, x + 30, y, 25, 85);
@@ -42,10 +42,10 @@ void SpaceShip::Render(unsigned int frame)
     setRectSize(rightHitbox, x + 55, y + 40, 30, 35);
 
 //	Render Hitbox (for bug fixing only)
-//	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 //	SDL_RenderDrawRect(renderer, &flame);
 //	SDL_RenderDrawRect(renderer, &leftHitbox);
-//	SDL_RenderDrawRect(renderer, &mainHitbox);
+	SDL_RenderDrawRect(renderer, &mainHitbox);
 //	SDL_RenderDrawRect(renderer, &rightHitbox);
 }
 

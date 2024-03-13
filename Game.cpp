@@ -23,7 +23,7 @@ void Game::NewGame()
 	Spaceship = new SpaceShip(renderer,"image/spaceship.png", "image/engine_flame.png");
 	frame = 0;
 	obstaclesSpawnRate = 25; // minimum rate is 1 per 3 frames
-	coinSpawnRate = 80;
+	coinSpawnRate = 100;
 	livesLeft = 3;
 	if(!obstaclesList.empty()){
         obstaclesList.erase(obstaclesList.begin(),obstaclesList.end());
@@ -70,6 +70,15 @@ void Game::Render()
         }
     }
     Spaceship->Render(frame);
+    if(!bulletList.empty()){
+        std::list<Bullet*>::iterator currentBullet = bulletList.begin();
+        while (currentBullet != bulletList.end()) {
+        // Render bullet
+            (*currentBullet)->Render();
+            (*currentBullet)->Update(); // Update bullet position/state
+            ++currentBullet;
+        }
+    }
     SDL_RenderPresent(renderer);
 }
 
@@ -82,7 +91,6 @@ void Game::Run()
         if( SDL_PollEvent( &event ) != 0)
         {
             if( event.type == SDL_QUIT || event.key.keysym.sym == SDLK_ESCAPE ) quit = true;
-
         }
         Update();
         Render();
@@ -133,6 +141,12 @@ void Game::HandleInput()
 	{
 		Spaceship->moveDown();
 	}
+	if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE)
+    {
+        std::cout << "shoot" << std::endl;
+        bullet = new Bullet(renderer, Spaceship->getMainHitBox());
+        bulletList.push_back(bullet);
+    }
 }
 
 void Game::KeepInScreen(Object* object)
@@ -173,6 +187,20 @@ void Game::IterateThroughList()
             ++currentCoin;
         }
     }
+
+    std::list<Bullet*>::iterator currentBullet = bulletList.begin();
+    while (currentBullet != bulletList.end()) {
+    // Check if bullet is off screen
+    if ((*currentBullet)->Box.y > SCREEN_HEIGHT) {
+        delete (*currentBullet);
+        // erase returns the iterator following the last removed element
+        currentBullet = bulletList.erase(currentBullet);
+    } else {
+        (*currentBullet)->Update();
+        ++currentBullet;
+    }
+}
+
 }
 
 void Game::Quit()

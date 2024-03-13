@@ -10,7 +10,7 @@ Obstacles::Obstacles(SDL_Renderer *renderer) : MovingObject(renderer)
     Box.w = newSurface->w; // this get width from new_surface
     Box.h = newSurface->h;
 	SDL_FreeSurface(newSurface);
-    x = rand() % SCREEN_WIDTH; // spawning asteroid randomly base on sreenwidth
+    x = rand() % (SCREEN_WIDTH - Box.w); // spawning asteroid randomly base on sreenwidth
 	y = -100;
 	moveSpeed = 10; // default speed = 10
     setRectSize(Box, x, y, Box.w, Box.h);
@@ -37,7 +37,7 @@ void Obstacles::Render()
 //	SDL_RenderDrawRect(renderer, &Hitbox);
 }
 
-bool Obstacles::isCollided(const SDL_Rect* leftHitBox, const SDL_Rect* rightHitBox, const SDL_Rect* mainHitBox)
+bool Obstacles::isCollided(const SDL_Rect* leftHitBox, const SDL_Rect* rightHitBox, const SDL_Rect* mainHitBox) //move to useful function in the future may be
 {
     if(SDL_HasIntersection(&Hitbox, leftHitBox)) return true;
     if(SDL_HasIntersection(&Hitbox, rightHitBox)) return true;

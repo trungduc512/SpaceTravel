@@ -1,8 +1,7 @@
-#ifndef ASTEROID_H_INCLUDED
-#define ASTEROID_H_INCLUDED
+#ifndef OBSTACLES_H_INCLUDED
+#define OBSTACLES_H_INCLUDED
 
 #include "MovingObject.h"
-#include <iostream>
 
 class Obstacles : public MovingObject
 {
@@ -22,4 +21,4 @@ private:
 };
 
 
-#endif // ASTEROID_H_INCLUDED
+#endif // OBSTACLES_H_INCLUDED

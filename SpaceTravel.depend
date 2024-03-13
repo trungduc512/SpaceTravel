@@ -14,14 +14,15 @@
 	"GameConstants.h"
 	<SDL.h>
 
-1710258682 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\game.cpp
+1710355123 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\game.cpp
 	"Game.h"
 
-1710258149 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\game.h
+1710346244 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\game.h
 	"GameConstants.h"
 	"SpaceShip.h"
 	"Obstacles.h"
 	"Coin.h"
+	"Bullet.h"
 	<SDL.h>
 	<iostream>
 	<list>
@@ -34,8 +35,9 @@
 1709467117 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\object.cpp
 	"Object.h"
 
-1710087556 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\object.h
+1710345627 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\object.h
 	<SDL_image.h>
+	<iostream>
 	"UsefulFunctions.h"
 
 1710182790 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\spaceship.h
@@ -43,7 +45,7 @@
 	"GameConstants.h"
 	<string>
 
-1710245340 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\spaceship.cpp
+1710354839 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\spaceship.cpp
 	"SpaceShip.h"
 
 1710252035 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\usefulfunctions.h
@@ -52,7 +54,7 @@
 1709716857 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\movingobject.cpp
 	"MovingObject.h"
 
-1710172123 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\movingobject.h
+1710345056 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\movingobject.h
 	"Object.h"
 	"GameConstants.h"
 	<time.h>
@@ -68,17 +70,22 @@
 1710252057 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\usefulfunctions.cpp
 	"UsefulFunctions.h"
 
-1710256828 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\obstacles.h
+1710343974 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\obstacles.h
 	"MovingObject.h"
-	<iostream>
 
-1710257909 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\obstacles.cpp
+1710342317 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\obstacles.cpp
 	"Obstacles.h"
 
-1710259503 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\coin.cpp
+1710260593 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\coin.cpp
 	"Coin.h"
 
 1710258810 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\coin.h
 	"MovingObject.h"
 	<iostream>
+
+1710355750 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\bullet.cpp
+	"Bullet.h"
+
+1710354592 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\bullet.h
+	"MovingObject.h"
 

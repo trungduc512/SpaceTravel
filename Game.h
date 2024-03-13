@@ -5,6 +5,7 @@
 #include "SpaceShip.h"
 #include "Obstacles.h"
 #include "Coin.h"
+#include "Bullet.h"
 #include <SDL.h>
 #include <iostream>
 #include <list>
@@ -30,8 +31,10 @@ private:
     SpaceShip* Spaceship;
     std::list<Obstacles*> obstaclesList;
     std::list<Coin*> coinList;
+    std::list<Bullet*> bulletList;
     Obstacles* obstacle;
     Coin* coin;
+    Bullet* bullet;
     unsigned int frame;
     unsigned int obstaclesSpawnRate;
     unsigned int coinSpawnRate;
