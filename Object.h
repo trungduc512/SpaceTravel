@@ -3,6 +3,7 @@
 
 #include <SDL_image.h>
 #include <iostream>
+#include "GameConstants.h"
 #include "UsefulFunctions.h"
 
 class Object

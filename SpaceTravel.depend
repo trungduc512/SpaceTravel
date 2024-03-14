@@ -14,20 +14,24 @@
 	"GameConstants.h"
 	<SDL.h>
 
-1710355123 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\game.cpp
+1710427689 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\game.cpp
 	"Game.h"
 
-1710346244 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\game.h
+1710427273 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\game.h
 	"GameConstants.h"
 	"SpaceShip.h"
 	"Obstacles.h"
 	"Coin.h"
 	"Bullet.h"
+	"Text.h"
 	<SDL.h>
 	<iostream>
 	<list>
+	<string>
+	<sstream>
 
-1710177300 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\gameconstants.h
+1710426314 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\gameconstants.h
+	<SDL.h>
 
 1709912601 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\main.cpp
 	"Game.h"
@@ -35,17 +39,18 @@
 1709467117 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\object.cpp
 	"Object.h"
 
-1710345627 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\object.h
+1710425839 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\object.h
 	<SDL_image.h>
 	<iostream>
+	"GameConstants.h"
 	"UsefulFunctions.h"
 
-1710182790 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\spaceship.h
+1710426065 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\spaceship.h
 	"Object.h"
 	"GameConstants.h"
 	<string>
 
-1710354839 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\spaceship.cpp
+1710425977 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\spaceship.cpp
 	"SpaceShip.h"
 
 1710252035 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\usefulfunctions.h
@@ -54,7 +59,7 @@
 1709716857 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\movingobject.cpp
 	"MovingObject.h"
 
-1710345056 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\movingobject.h
+1710412419 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\movingobject.h
 	"Object.h"
 	"GameConstants.h"
 	<time.h>
@@ -83,9 +88,18 @@
 	"MovingObject.h"
 	<iostream>
 
-1710355750 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\bullet.cpp
+1710425378 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\bullet.cpp
 	"Bullet.h"
 
-1710354592 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\bullet.h
+1710425272 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\bullet.h
 	"MovingObject.h"
+
+1710427767 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\text.cpp
+	"Text.h"
+
+1710413465 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\text.h
+	<SDL_ttf.h>
+	<iostream>
+	<string>
+	"UsefulFunctions.h"
 

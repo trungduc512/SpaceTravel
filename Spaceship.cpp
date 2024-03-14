@@ -42,10 +42,10 @@ void SpaceShip::Render(unsigned int frame)
     setRectSize(rightHitbox, x + 55, y + 40, 30, 35);
 
 //	Render Hitbox (for bug fixing only)
-	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+//	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 //	SDL_RenderDrawRect(renderer, &flame);
 //	SDL_RenderDrawRect(renderer, &leftHitbox);
-	SDL_RenderDrawRect(renderer, &mainHitbox);
+//	SDL_RenderDrawRect(renderer, &mainHitbox);
 //	SDL_RenderDrawRect(renderer, &rightHitbox);
 }
 
@@ -67,6 +67,16 @@ void SpaceShip::moveLeft()
 void SpaceShip::moveRight()
 {
     x += 10;
+}
+
+bool SpaceShip::fullyCharge(Uint32 &lastShootTime)
+{
+    Uint32 currentTime = SDL_GetTicks();
+    if(currentTime - lastShootTime >= SHOOT_COOLDOWN){
+        lastShootTime = currentTime;
+        return 1;
+    }
+    return 0;
 }
 
 SDL_Rect* SpaceShip::getLeftHitBox()

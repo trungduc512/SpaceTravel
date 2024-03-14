@@ -6,9 +6,12 @@
 #include "Obstacles.h"
 #include "Coin.h"
 #include "Bullet.h"
+#include "Text.h"
 #include <SDL.h>
 #include <iostream>
 #include <list>
+#include <string>
+#include <sstream>
 
 class Game
 {
@@ -22,6 +25,7 @@ public:
     void HandleInput();
     void KeepInScreen(Object* object);
     void IterateThroughList();
+    void increaseScore(int n);
     void Quit();
 
 private:
@@ -35,10 +39,13 @@ private:
     Obstacles* obstacle;
     Coin* coin;
     Bullet* bullet;
+    Text* text;
     unsigned int frame;
     unsigned int obstaclesSpawnRate;
     unsigned int coinSpawnRate;
     unsigned int livesLeft;
+    unsigned int score;
+    Uint32 lastShootTime;
 };
 
 #endif // GAME_H_INCLUDED

@@ -16,7 +16,7 @@
 					<Add directory="C:/mingw_dev_lib/sdl image/include" />
 				</Compiler>
 				<Linker>
-					<Add option="-lmingw32 -lSDL2main -lSDL2 -lSDL2_image" />
+					<Add option="-lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_TTF -lSDL2_mixer" />
 					<Add directory="C:/mingw_dev_lib/sdl image/lib" />
 				</Linker>
 			</Target>
@@ -52,6 +52,8 @@
 		<Unit filename="Obstacles.h" />
 		<Unit filename="SpaceShip.h" />
 		<Unit filename="Spaceship.cpp" />
+		<Unit filename="Text.cpp" />
+		<Unit filename="Text.h" />
 		<Unit filename="UsefulFunctions.cpp" />
 		<Unit filename="UsefulFunctions.h" />
 		<Unit filename="main.cpp" />

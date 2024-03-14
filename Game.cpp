@@ -5,12 +5,15 @@ Game::Game()
     window = NULL;
     renderer = NULL;
     Spaceship = NULL;
+    text = NULL;
 }
 
 bool Game::Init()
 {
     srand(time(NULL));
     SDL_Init(SDL_INIT_VIDEO);
+    TTF_Init();
+    lastShootTime = 0;
     window = SDL_CreateWindow( "test", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
     if( window == NULL ) return false;
     renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_PRESENTVSYNC );
@@ -21,15 +24,22 @@ bool Game::Init()
 void Game::NewGame()
 {
 	Spaceship = new SpaceShip(renderer,"image/spaceship.png", "image/engine_flame.png");
+	text = new Text(renderer);
+
 	frame = 0;
 	obstaclesSpawnRate = 25; // minimum rate is 1 per 3 frames
 	coinSpawnRate = 100;
 	livesLeft = 3;
+	score = 0;
+
 	if(!obstaclesList.empty()){
         obstaclesList.erase(obstaclesList.begin(),obstaclesList.end());
 	}
     if(!coinList.empty()){
         coinList.erase(coinList.begin(),coinList.end());
+	}
+    if(!bulletList.empty()){
+        bulletList.erase(bulletList.begin(),bulletList.end());
 	}
 }
 void Game::Render()
@@ -37,6 +47,7 @@ void Game::Render()
     //set color for the window
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 
+    //clear previous screen
     SDL_RenderClear(renderer);
 
     //iterate through obstacles list
@@ -48,7 +59,7 @@ void Game::Render()
         if((*currentObstacle)->isCollided(Spaceship->getLeftHitBox(), Spaceship->getRightHitBox(), Spaceship->getMainHitBox())){
             // erase returns the iterator following the last removed element
             currentObstacle = obstaclesList.erase(currentObstacle);
-//            livesLeft--;
+            livesLeft--;
         }
         else {
             ++currentObstacle;
@@ -64,6 +75,7 @@ void Game::Render()
         if((*currentCoin)->isCollided(Spaceship->getLeftHitBox(), Spaceship->getRightHitBox(), Spaceship->getMainHitBox())){
             // erase returns the iterator following the last removed element
             currentCoin = coinList.erase(currentCoin);
+            increaseScore(100);
         }
         else {
             ++currentCoin;
@@ -75,10 +87,11 @@ void Game::Render()
         while (currentBullet != bulletList.end()) {
         // Render bullet
             (*currentBullet)->Render();
-            (*currentBullet)->Update(); // Update bullet position/state
             ++currentBullet;
         }
     }
+    text->DrawText("Score: ", 0, 0, 30);
+    text->DrawText(std::to_string(score), 150, 0, 30);
     SDL_RenderPresent(renderer);
 }
 
@@ -143,9 +156,11 @@ void Game::HandleInput()
 	}
 	if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE)
     {
-        std::cout << "shoot" << std::endl;
-        bullet = new Bullet(renderer, Spaceship->getMainHitBox());
-        bulletList.push_back(bullet);
+        if(Spaceship->fullyCharge(lastShootTime)){
+            std::cout << "shoot" << std::endl;
+            bullet = new Bullet(renderer, Spaceship->getMainHitBox());
+            bulletList.push_back(bullet);
+        }
     }
 }
 
@@ -167,6 +182,8 @@ void Game::IterateThroughList()
             delete(*currentObstacle);
             // erase returns the iterator following the last removed element
             currentObstacle = obstaclesList.erase(currentObstacle);
+            //increase score by 1
+            increaseScore(1);
         }
         else {
             (*currentObstacle)->Update();
@@ -191,16 +208,21 @@ void Game::IterateThroughList()
     std::list<Bullet*>::iterator currentBullet = bulletList.begin();
     while (currentBullet != bulletList.end()) {
     // Check if bullet is off screen
-    if ((*currentBullet)->Box.y > SCREEN_HEIGHT) {
-        delete (*currentBullet);
-        // erase returns the iterator following the last removed element
-        currentBullet = bulletList.erase(currentBullet);
-    } else {
-        (*currentBullet)->Update();
-        ++currentBullet;
+        if ((*currentBullet)->Box.y > SCREEN_HEIGHT) {
+            delete (*currentBullet);
+            // erase returns the iterator following the last removed element
+            currentBullet = bulletList.erase(currentBullet);
+        }
+        else {
+            (*currentBullet)->Update();
+            ++currentBullet;
+        }
     }
 }
 
+void Game::increaseScore(int n)
+{
+    score += n;
 }
 
 void Game::Quit()
@@ -208,5 +230,6 @@ void Game::Quit()
     SDL_DestroyWindow( window );
     SDL_DestroyRenderer( renderer );
     SDL_Quit();
+    TTF_Quit();
 }
 

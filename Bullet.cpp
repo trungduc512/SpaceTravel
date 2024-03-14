@@ -9,7 +9,7 @@ Bullet::Bullet(SDL_Renderer* renderer, const SDL_Rect *mainHitBox) : MovingObjec
     width = newSurface->w;
     height = newSurface->h;
     SDL_FreeSurface(newSurface);
-    moveSpeed = 10;
+    moveSpeed = 15;
     x = mainHitBox->x + (mainHitBox->w - width)/2;
     y = mainHitBox->y - height / 1.5;
     setRectSize(Box, x, y, width, height);
@@ -30,9 +30,10 @@ void Bullet::Render()
     setRectSize(Hitbox, Box.x, Box.y, Box.w, Box.h);
     SDL_RenderCopy(renderer, texture, NULL, &Box);
     //Render Hitbox
-    //SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    //SDL_RenderDrawRect(renderer, &Hitbox);
+//    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+//    SDL_RenderDrawRect(renderer, &Hitbox);
 }
+
 
 
 
