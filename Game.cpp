@@ -31,6 +31,7 @@ void Game::NewGame()
 	coinSpawnRate = 100;
 	livesLeft = 3;
 	score = 0;
+	newGameFlag = 1;
 
 	if(!obstaclesList.empty()){
         obstaclesList.erase(obstaclesList.begin(),obstaclesList.end());
@@ -50,12 +51,28 @@ void Game::Render()
     //clear previous screen
     SDL_RenderClear(renderer);
 
+    //iterate through bullet list
+    if(!bulletList.empty()){
+        std::list<Bullet*>::iterator currentBullet = bulletList.begin();
+        while (currentBullet != bulletList.end()) {
+            // Render bullet
+            (*currentBullet)->Render();
+            ++currentBullet;
+        }
+    }
+
     //iterate through obstacles list
     std::list<Obstacles*>::iterator currentObstacle = obstaclesList.begin();
     while (currentObstacle != obstaclesList.end()){
         //render asteroid
         (*currentObstacle)->Render();
         //check collision
+        if(!bulletList.empty() && SDL_HasIntersection((*bulletList.begin())->getHitBox(),(*currentObstacle)->getHitBox())){
+                currentObstacle = obstaclesList.erase(currentObstacle);
+                bulletList.erase(bulletList.begin());
+                increaseScore(100);
+                continue;
+        }
         if((*currentObstacle)->isCollided(Spaceship->getLeftHitBox(), Spaceship->getRightHitBox(), Spaceship->getMainHitBox())){
             // erase returns the iterator following the last removed element
             currentObstacle = obstaclesList.erase(currentObstacle);
@@ -82,14 +99,7 @@ void Game::Render()
         }
     }
     Spaceship->Render(frame);
-    if(!bulletList.empty()){
-        std::list<Bullet*>::iterator currentBullet = bulletList.begin();
-        while (currentBullet != bulletList.end()) {
-        // Render bullet
-            (*currentBullet)->Render();
-            ++currentBullet;
-        }
-    }
+
     text->DrawText("Score: ", 0, 0, 30);
     text->DrawText(std::to_string(score), 150, 0, 30);
     SDL_RenderPresent(renderer);
@@ -109,8 +119,9 @@ void Game::Run()
         Render();
         frame++;
         //debug
-        std::cout << frame << std::endl;
-        std::cout << obstaclesList.size() << std::endl;
+//        std::cout << frame << std::endl;
+//        std::cout << obstaclesList.size() << std::endl;
+        std::cout << bulletList.size() << std::endl;
     }
     delete Spaceship;
     Quit();
@@ -118,11 +129,11 @@ void Game::Run()
 
 void Game::Update()
 {
-    HandleInput();
     if(livesLeft == 0){
         SDL_Delay(1000);
         NewGame();
     }
+    HandleInput();
     if(frame % obstaclesSpawnRate == 0){
         obstacle = new Obstacles(renderer);
 		obstaclesList.push_back(obstacle);
@@ -156,10 +167,11 @@ void Game::HandleInput()
 	}
 	if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE)
     {
-        if(Spaceship->fullyCharge(lastShootTime)){
+        if(Spaceship->fullyCharge(lastShootTime) || newGameFlag){
             std::cout << "shoot" << std::endl;
             bullet = new Bullet(renderer, Spaceship->getMainHitBox());
             bulletList.push_back(bullet);
+            newGameFlag = 0;
         }
     }
 }
@@ -208,7 +220,7 @@ void Game::IterateThroughList()
     std::list<Bullet*>::iterator currentBullet = bulletList.begin();
     while (currentBullet != bulletList.end()) {
     // Check if bullet is off screen
-        if ((*currentBullet)->Box.y > SCREEN_HEIGHT) {
+        if ((*currentBullet)->Box.y < 0) {
             delete (*currentBullet);
             // erase returns the iterator following the last removed element
             currentBullet = bulletList.erase(currentBullet);

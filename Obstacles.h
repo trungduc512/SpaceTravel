@@ -13,6 +13,7 @@ public:
     void Update();
     bool isCollided(const SDL_Rect* leftHitBox, const SDL_Rect* rightHitBox, const SDL_Rect* mainHitBox);
     void getRandomImage();
+    SDL_Rect* getHitBox();
 
 private:
     SDL_Rect Hitbox;

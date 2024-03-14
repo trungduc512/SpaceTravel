@@ -53,3 +53,8 @@ void Obstacles::getRandomImage()
     if(range(pathnum, 97, 99)) path = "image/satellite.png";
     if(range(pathnum, 100, 100)) path = "image/amogus.png";
 }
+
+SDL_Rect* Obstacles::getHitBox()
+{
+    return &Hitbox;
+}

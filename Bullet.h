@@ -11,6 +11,7 @@ public:
 
     void Render();
     void Update();
+    SDL_Rect* getHitBox();
 
 private:
     SDL_Rect Hitbox;

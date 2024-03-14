@@ -45,6 +45,7 @@ private:
     unsigned int coinSpawnRate;
     unsigned int livesLeft;
     unsigned int score;
+    bool newGameFlag;
     Uint32 lastShootTime;
 };
 

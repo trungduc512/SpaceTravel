@@ -5,6 +5,6 @@
 
 const int SCREEN_WIDTH = 1920;
 const int SCREEN_HEIGHT = 1080;
-const Uint32 SHOOT_COOLDOWN = 200;
+const Uint32 SHOOT_COOLDOWN = 800;
 
 #endif // GAMECONSTANTS_H_INCLUDED
