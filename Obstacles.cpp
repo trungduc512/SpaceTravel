@@ -33,8 +33,8 @@ void Obstacles::Render()
     SDL_RenderCopy(renderer, texture, NULL, &Box);
     setRectSize(Hitbox, Box.x, Box.y, Box.w, Box.h);
 	//Render Collision Box
-	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-	SDL_RenderDrawRect(renderer, &Hitbox);
+//	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+//	SDL_RenderDrawRect(renderer, &Hitbox);
 }
 
 bool Obstacles::isCollided(const SDL_Rect* leftHitBox, const SDL_Rect* rightHitBox, const SDL_Rect* mainHitBox) //move to useful function in the future may be
