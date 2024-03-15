@@ -16,7 +16,7 @@ bool Game::Init()
     lastShootTime = 0;
     window = SDL_CreateWindow( "test", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
     if( window == NULL ) return false;
-    renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_PRESENTVSYNC );
+    renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
     if( renderer == NULL ) return false;
     return true;
 }
@@ -70,13 +70,13 @@ void Game::Render()
         if(!bulletList.empty() && SDL_HasIntersection((*bulletList.begin())->getHitBox(),(*currentObstacle)->getHitBox())){
                 currentObstacle = obstaclesList.erase(currentObstacle);
                 bulletList.erase(bulletList.begin());
-                increaseScore(100);
+                increaseScore(OBSTACLE_BREAK_POINT);
                 continue;
         }
         if((*currentObstacle)->isCollided(Spaceship->getLeftHitBox(), Spaceship->getRightHitBox(), Spaceship->getMainHitBox())){
             // erase returns the iterator following the last removed element
             currentObstacle = obstaclesList.erase(currentObstacle);
-            livesLeft--;
+//            livesLeft--;
         }
         else {
             ++currentObstacle;
@@ -92,7 +92,7 @@ void Game::Render()
         if((*currentCoin)->isCollided(Spaceship->getLeftHitBox(), Spaceship->getRightHitBox(), Spaceship->getMainHitBox())){
             // erase returns the iterator following the last removed element
             currentCoin = coinList.erase(currentCoin);
-            increaseScore(100);
+            increaseScore(COIN_POINT);
         }
         else {
             ++currentCoin;
@@ -101,7 +101,7 @@ void Game::Render()
     Spaceship->Render(frame);
 
     text->DrawText("Score: ", 0, 0, 30);
-    text->DrawText(std::to_string(score), 150, 0, 30);
+    text->DrawText(std::to_string(score), 130, 0, 30);
     SDL_RenderPresent(renderer);
 }
 
@@ -111,6 +111,7 @@ void Game::Run()
     bool quit = false;
     while( quit == false )
     {
+        frameStart = SDL_GetTicks();
         if( SDL_PollEvent( &event ) != 0)
         {
             if( event.type == SDL_QUIT || event.key.keysym.sym == SDLK_ESCAPE ) quit = true;
@@ -118,10 +119,18 @@ void Game::Run()
         Update();
         Render();
         frame++;
+
+        //stable fps
+        frameTime = SDL_GetTicks() - frameStart;
+		if (frameTime < DELAY_TIME)
+		{
+			SDL_Delay(DELAY_TIME - frameTime);
+		}
+
         //debug
 //        std::cout << frame << std::endl;
 //        std::cout << obstaclesList.size() << std::endl;
-        std::cout << bulletList.size() << std::endl;
+//        std::cout << bulletList.size() << std::endl;
     }
     delete Spaceship;
     Quit();
@@ -232,7 +241,7 @@ void Game::IterateThroughList()
     }
 }
 
-void Game::increaseScore(int n)
+void Game::increaseScore(const int n)
 {
     score += n;
 }

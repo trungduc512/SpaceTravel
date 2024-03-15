@@ -47,6 +47,8 @@ private:
     unsigned int score;
     bool newGameFlag;
     Uint32 lastShootTime;
+    Uint32 frameStart;
+	Uint32 frameTime;
 };
 
 #endif // GAME_H_INCLUDED

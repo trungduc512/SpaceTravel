@@ -5,6 +5,11 @@
 
 const int SCREEN_WIDTH = 1920;
 const int SCREEN_HEIGHT = 1080;
+const int SPACESHIP_MOVE_SPEED = 15;
+const int COIN_POINT = 100;
+const int OBSTACLE_BREAK_POINT = 50;
 const Uint32 SHOOT_COOLDOWN = 800;
+const int FPS = 60;
+const int DELAY_TIME = 1000/FPS;
 
 #endif // GAMECONSTANTS_H_INCLUDED

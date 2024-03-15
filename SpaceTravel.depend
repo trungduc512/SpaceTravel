@@ -14,10 +14,10 @@
 	"GameConstants.h"
 	<SDL.h>
 
-1710430398 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\game.cpp
+1710476919 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\game.cpp
 	"Game.h"
 
-1710428685 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\game.h
+1710476616 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\game.h
 	"GameConstants.h"
 	"SpaceShip.h"
 	"Obstacles.h"
@@ -30,7 +30,7 @@
 	<string>
 	<sstream>
 
-1710428947 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\gameconstants.h
+1710477180 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\gameconstants.h
 	<SDL.h>
 
 1709912601 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\main.cpp
@@ -50,7 +50,7 @@
 	"GameConstants.h"
 	<string>
 
-1710425977 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\spaceship.cpp
+1710431337 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\spaceship.cpp
 	"SpaceShip.h"
 
 1710252035 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\usefulfunctions.h
@@ -78,10 +78,10 @@
 1710429964 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\obstacles.h
 	"MovingObject.h"
 
-1710429972 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\obstacles.cpp
+1710431824 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\obstacles.cpp
 	"Obstacles.h"
 
-1710260593 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\coin.cpp
+1710475694 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\coin.cpp
 	"Coin.h"
 
 1710258810 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\coin.h
@@ -94,7 +94,7 @@
 1710430027 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\bullet.h
 	"MovingObject.h"
 
-1710428249 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\text.cpp
+1710430837 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\text.cpp
 	"Text.h"
 
 1710413465 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\text.h

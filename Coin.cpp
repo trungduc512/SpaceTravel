@@ -12,7 +12,7 @@ Coin::Coin(SDL_Renderer *renderer, std::string path) : MovingObject(renderer)
 
 	SDL_FreeSurface(newSurface);
 
-	// spawning asteroid randomly base on sreenwidth
+	// spawning coin randomly base on sreenwidth
     x = rand() % (SCREEN_WIDTH - Box.w);
 	y = -100;
 	moveSpeed = 10; // default speed = 10

@@ -19,8 +19,9 @@ void Text::DrawText(std::string text, int x, int y, int fontSize)
     //set postion & size for the text
 	SDL_Rect posRect;
 	setRectSize(posRect, x, y, sizeRect.w, sizeRect.h);
-
+    //render the text
 	SDL_RenderCopy(renderer, texture, &sizeRect, &posRect);
+	//quit system
 	SDL_DestroyTexture(texture);
 	SDL_FreeSurface(surface);
 	TTF_CloseFont(font);

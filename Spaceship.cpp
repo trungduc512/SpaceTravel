@@ -51,22 +51,22 @@ void SpaceShip::Render(unsigned int frame)
 
 void SpaceShip::moveUp()
 {
-    y -= 10;
+    y -= SPACESHIP_MOVE_SPEED;
 }
 
 void SpaceShip::moveDown()
 {
-    y += 10;
+    y += SPACESHIP_MOVE_SPEED;
 }
 
 void SpaceShip::moveLeft()
 {
-    x -= 10;
+    x -= SPACESHIP_MOVE_SPEED;
 }
 
 void SpaceShip::moveRight()
 {
-    x += 10;
+    x += SPACESHIP_MOVE_SPEED;
 }
 
 bool SpaceShip::fullyCharge(Uint32 &lastShootTime)
