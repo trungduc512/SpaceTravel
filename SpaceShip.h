@@ -16,7 +16,7 @@ public:
 	void moveRight();
 	void moveUp();
 	void moveDown();
-	bool fullyCharge(Uint32 &lastShootTime);
+	int RemainCooldown(Uint32 &lastShootTime);
 	SDL_Rect* getLeftHitBox();
 	SDL_Rect* getRightHitBox();
 	SDL_Rect* getMainHitBox();

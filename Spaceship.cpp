@@ -69,14 +69,17 @@ void SpaceShip::moveRight()
     x += SPACESHIP_MOVE_SPEED;
 }
 
-bool SpaceShip::fullyCharge(Uint32 &lastShootTime)
+int SpaceShip::RemainCooldown(Uint32 &lastShootTime)
 {
-    Uint32 currentTime = SDL_GetTicks();
-    if(currentTime - lastShootTime >= SHOOT_COOLDOWN){
-        lastShootTime = currentTime;
-        return 1;
+    if(lastShootTime == 0){
+        return SHOOT_COOLDOWN;
     }
-    return 0;
+    Uint32 currentTime = SDL_GetTicks();
+    int remainCooldown = currentTime - lastShootTime;
+    if(remainCooldown >= SHOOT_COOLDOWN){
+        return SHOOT_COOLDOWN;
+    }
+    return remainCooldown;
 }
 
 SDL_Rect* SpaceShip::getLeftHitBox()

@@ -5,6 +5,7 @@ Game::Game()
     window = NULL;
     renderer = NULL;
     Spaceship = NULL;
+    energyBar = NULL;
     text = NULL;
 }
 
@@ -23,16 +24,16 @@ bool Game::Init()
 
 void Game::NewGame()
 {
+    delete Spaceship;
+    delete energyBar;
 	Spaceship = new SpaceShip(renderer,"image/spaceship.png", "image/engine_flame.png");
 	text = new Text(renderer);
-
+    energyBar = new HUD(renderer, "image/energy_bar.png");
 	frame = 0;
 	obstaclesSpawnRate = 25; // minimum rate is 1 per 3 frames
 	coinSpawnRate = 100;
 	livesLeft = 3;
 	score = 0;
-	newGameFlag = 1;
-
 	if(!obstaclesList.empty()){
         obstaclesList.erase(obstaclesList.begin(),obstaclesList.end());
 	}
@@ -76,7 +77,7 @@ void Game::Render()
         if((*currentObstacle)->isCollided(Spaceship->getLeftHitBox(), Spaceship->getRightHitBox(), Spaceship->getMainHitBox())){
             // erase returns the iterator following the last removed element
             currentObstacle = obstaclesList.erase(currentObstacle);
-//            livesLeft--;
+            livesLeft--;
         }
         else {
             ++currentObstacle;
@@ -99,7 +100,7 @@ void Game::Render()
         }
     }
     Spaceship->Render(frame);
-
+    energyBar->RenderEnergyBar(Spaceship->RemainCooldown(lastShootTime));
     text->DrawText("Score: ", 0, 0, 30);
     text->DrawText(std::to_string(score), 130, 0, 30);
     SDL_RenderPresent(renderer);
@@ -132,7 +133,6 @@ void Game::Run()
 //        std::cout << obstaclesList.size() << std::endl;
 //        std::cout << bulletList.size() << std::endl;
     }
-    delete Spaceship;
     Quit();
 }
 
@@ -176,11 +176,11 @@ void Game::HandleInput()
 	}
 	if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE)
     {
-        if(Spaceship->fullyCharge(lastShootTime) || newGameFlag){
+        if( Spaceship->RemainCooldown(lastShootTime) == SHOOT_COOLDOWN ){
             std::cout << "shoot" << std::endl;
             bullet = new Bullet(renderer, Spaceship->getMainHitBox());
             bulletList.push_back(bullet);
-            newGameFlag = 0;
+            lastShootTime = SDL_GetTicks();
         }
     }
 }

@@ -7,11 +7,11 @@
 #include "Coin.h"
 #include "Bullet.h"
 #include "Text.h"
+#include "HUD.h"
 #include <SDL.h>
 #include <iostream>
 #include <list>
 #include <string>
-#include <sstream>
 
 class Game
 {
@@ -33,6 +33,7 @@ private:
     SDL_Window* window;
     SDL_Event event;
     SpaceShip* Spaceship;
+    HUD* energyBar;
     std::list<Obstacles*> obstaclesList;
     std::list<Coin*> coinList;
     std::list<Bullet*> bulletList;
