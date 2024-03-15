@@ -37,6 +37,7 @@ void Game::NewGame()
 	coinSpawnRate = 100;
 	starSpawnRate = 2;
 	largeStarSpawnRate = 3;
+	backgroundSpawnRate = 150;
 	livesLeft = 3;
 	score = 0;
 	if(!obstaclesList.empty()){
@@ -54,6 +55,9 @@ void Game::NewGame()
     if(!largeStarList.empty()){
         largeStarList.erase(largeStarList.begin(),largeStarList.end());
 	}
+    if(!backgroundList.empty()){
+        backgroundList.erase(backgroundList.begin(),backgroundList.end());
+	}
 }
 void Game::Render()
 {
@@ -68,10 +72,17 @@ void Game::Render()
         //render stars
         currentStar->Render();
     }
+
+    for(Background* currentBackground : backgroundList){
+        currentBackground->Render();
+    }
+
     for(Star* currentStar : largeStarList){
         //render large stars
         currentStar->Render();
     }
+
+
 
     //render spaceship
     Spaceship->Render(frame);
@@ -194,6 +205,10 @@ void Game::Update()
         starList.push_back(star);
     }
 
+    if(frame % backgroundSpawnRate == 0){
+    	background = new Background(renderer);
+        backgroundList.push_back(background);
+    }
     KeepInScreen(Spaceship);
     IterateThroughList();
 }
@@ -308,11 +323,25 @@ void Game::IterateThroughList()
             ++currentBullet;
         }
     }
+
+    std::list<Background*>::iterator currentBackground = backgroundList.begin();
+    while (currentBackground != backgroundList.end()) {
+    // Check if background is off screen
+        if ((*currentBackground)->Box.y > SCREEN_HEIGHT) {
+            delete (*currentBackground);
+            // erase returns the iterator following the last removed element
+            currentBackground = backgroundList.erase(currentBackground);
+        }
+        else {
+            (*currentBackground)->Update();
+            ++currentBackground;
+        }
+    }
 }
 
-void Game::increaseScore(const int n)
+void Game::increaseScore(const int scoreGet)
 {
-    score += n;
+    score += scoreGet;
 }
 
 void Game::Quit()

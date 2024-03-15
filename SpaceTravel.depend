@@ -14,10 +14,10 @@
 	"GameConstants.h"
 	<SDL.h>
 
-1710516713 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\game.cpp
+1710533892 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\game.cpp
 	"Game.h"
 
-1710515789 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\game.h
+1710519675 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\game.h
 	"GameConstants.h"
 	"SpaceShip.h"
 	"Obstacles.h"
@@ -27,6 +27,7 @@
 	"HUD.h"
 	"Explosion.h"
 	"Star.h"
+	"Background.h"
 	<SDL.h>
 	<iostream>
 	<list>
@@ -80,7 +81,7 @@
 1710429964 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\obstacles.h
 	"MovingObject.h"
 
-1710496453 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\obstacles.cpp
+1710518535 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\obstacles.cpp
 	"Obstacles.h"
 
 1710475694 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\coin.cpp
@@ -122,4 +123,10 @@
 
 1710515106 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\star.cpp
 	"Star.h"
+
+1710533739 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\background.cpp
+	"Background.h"
+
+1710519142 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\background.h
+	"MovingObject.h"
 

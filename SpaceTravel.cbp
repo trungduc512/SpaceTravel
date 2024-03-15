@@ -37,6 +37,8 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="Background.cpp" />
+		<Unit filename="Background.h" />
 		<Unit filename="Bullet.cpp" />
 		<Unit filename="Bullet.h" />
 		<Unit filename="Coin.cpp" />
@@ -56,6 +58,8 @@
 		<Unit filename="Obstacles.h" />
 		<Unit filename="SpaceShip.h" />
 		<Unit filename="Spaceship.cpp" />
+		<Unit filename="Star.cpp" />
+		<Unit filename="Star.h" />
 		<Unit filename="Text.cpp" />
 		<Unit filename="Text.h" />
 		<Unit filename="UsefulFunctions.cpp" />

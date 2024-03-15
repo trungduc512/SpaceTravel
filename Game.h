@@ -10,6 +10,7 @@
 #include "HUD.h"
 #include "Explosion.h"
 #include "Star.h"
+#include "Background.h"
 #include <SDL.h>
 #include <iostream>
 #include <list>
@@ -27,7 +28,7 @@ public:
     void HandleInput();
     void KeepInScreen(Object* object);
     void IterateThroughList();
-    void increaseScore(int n);
+    void increaseScore(int scoreGet);
     void Quit();
 
 private:
@@ -38,6 +39,7 @@ private:
     HUD* energyBar;
     Explosion* explosion;
     std::list<Obstacles*> obstaclesList;
+    std::list<Background*> backgroundList;
     std::list<Coin*> coinList;
     std::list<Bullet*> bulletList;
     std::list<Star*> starList;
@@ -48,11 +50,13 @@ private:
     Text* text;
     Star* star;
     Star* largeStar;
+    Background* background;
     unsigned int frame;
     unsigned int obstaclesSpawnRate;
     unsigned int coinSpawnRate;
     unsigned int largeStarSpawnRate;
     unsigned int starSpawnRate;
+    unsigned int backgroundSpawnRate;
     unsigned int livesLeft;
     unsigned int score;
     bool newGameFlag;

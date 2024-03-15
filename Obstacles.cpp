@@ -14,7 +14,6 @@ Obstacles::Obstacles(SDL_Renderer *renderer) : MovingObject(renderer)
 	y = -100;
 	moveSpeed = 10; // default speed = 10
     setRectSize(Box, x, y, Box.w, Box.h);
-//    setRectSize(Hitbox, x, y, Box.w, Box.h);
 }
 
 Obstacles::~Obstacles()
