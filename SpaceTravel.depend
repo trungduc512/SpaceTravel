@@ -14,10 +14,10 @@
 	"GameConstants.h"
 	<SDL.h>
 
-1710503001 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\game.cpp
+1710516713 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\game.cpp
 	"Game.h"
 
-1710500699 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\game.h
+1710515789 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\game.h
 	"GameConstants.h"
 	"SpaceShip.h"
 	"Obstacles.h"
@@ -26,6 +26,7 @@
 	"Text.h"
 	"HUD.h"
 	"Explosion.h"
+	"Star.h"
 	<SDL.h>
 	<iostream>
 	<list>
@@ -115,4 +116,10 @@
 
 1710501673 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\explosion.h
 	"Object.h"
+
+1710514439 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\star.h
+	"MovingObject.h"
+
+1710515106 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\star.cpp
+	"Star.h"
 

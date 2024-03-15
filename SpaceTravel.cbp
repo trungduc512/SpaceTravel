@@ -41,9 +41,13 @@
 		<Unit filename="Bullet.h" />
 		<Unit filename="Coin.cpp" />
 		<Unit filename="Coin.h" />
+		<Unit filename="Explosion.cpp" />
+		<Unit filename="Explosion.h" />
 		<Unit filename="Game.cpp" />
 		<Unit filename="Game.h" />
 		<Unit filename="GameConstants.h" />
+		<Unit filename="HUD.cpp" />
+		<Unit filename="HUD.h" />
 		<Unit filename="MovingObject.cpp" />
 		<Unit filename="MovingObject.h" />
 		<Unit filename="Object.cpp" />

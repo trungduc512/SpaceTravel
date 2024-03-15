@@ -35,6 +35,8 @@ void Game::NewGame()
 	frame = 0;
 	obstaclesSpawnRate = 25; // minimum rate is 1 per 3 frames
 	coinSpawnRate = 100;
+	starSpawnRate = 2;
+	largeStarSpawnRate = 3;
 	livesLeft = 3;
 	score = 0;
 	if(!obstaclesList.empty()){
@@ -46,6 +48,12 @@ void Game::NewGame()
     if(!bulletList.empty()){
         bulletList.erase(bulletList.begin(),bulletList.end());
 	}
+    if(!starList.empty()){
+        starList.erase(starList.begin(),starList.end());
+	}
+    if(!largeStarList.empty()){
+        largeStarList.erase(largeStarList.begin(),largeStarList.end());
+	}
 }
 void Game::Render()
 {
@@ -55,8 +63,19 @@ void Game::Render()
     //clear previous screen
     SDL_RenderClear(renderer);
 
+    //iterate through star list
+    for(Star* currentStar : starList){
+        //render stars
+        currentStar->Render();
+    }
+    for(Star* currentStar : largeStarList){
+        //render large stars
+        currentStar->Render();
+    }
+
     //render spaceship
     Spaceship->Render(frame);
+
     //iterate through bullet list
     if(!bulletList.empty()){
         std::list<Bullet*>::iterator currentBullet = bulletList.begin();
@@ -164,6 +183,17 @@ void Game::Update()
         coin = new Coin(renderer, "image/coin.png");
 		coinList.push_back(coin);
     }
+
+    if(frame % largeStarSpawnRate == 0){
+        largeStar = new Star(renderer, 5, 5, 7);
+        largeStarList.push_back(largeStar);
+    }
+
+    if(frame % starSpawnRate == 0){
+    	star = new Star(renderer, 1, 1, 5);
+        starList.push_back(star);
+    }
+
     KeepInScreen(Spaceship);
     IterateThroughList();
 }
@@ -206,6 +236,34 @@ void Game::KeepInScreen(Object* object)
 
 void Game::IterateThroughList()
 {
+    std::list<Star*>::iterator currentStar = starList.begin();
+    while (currentStar != starList.end()){
+        //Check if obstacle is off screen
+        if ((*currentStar)->Box.y > SCREEN_HEIGHT)
+        {
+            delete(*currentStar);
+            // erase returns the iterator following the last removed element
+            currentStar = starList.erase(currentStar);
+        }
+        else {
+            (*currentStar)->Update();
+            ++currentStar;
+        }
+    }
+    std::list<Star*>::iterator currentLargeStar = largeStarList.begin();
+    while (currentLargeStar != largeStarList.end()){
+        //Check if large star is off screen
+        if ((*currentLargeStar)->Box.y > SCREEN_HEIGHT)
+        {
+            delete(*currentLargeStar);
+            // erase returns the iterator following the last removed element
+            currentLargeStar = largeStarList.erase(currentLargeStar);
+        }
+        else {
+            (*currentLargeStar)->Update();
+            ++currentLargeStar;
+        }
+    }
     std::list<Obstacles*>::iterator currentObstacle = obstaclesList.begin();
     while (currentObstacle != obstaclesList.end()){
         //Check if obstacle is off screen
