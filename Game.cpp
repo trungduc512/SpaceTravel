@@ -6,6 +6,7 @@ Game::Game()
     renderer = NULL;
     Spaceship = NULL;
     energyBar = NULL;
+    explosion = NULL;
     text = NULL;
 }
 
@@ -26,9 +27,11 @@ void Game::NewGame()
 {
     delete Spaceship;
     delete energyBar;
+    delete explosion;
 	Spaceship = new SpaceShip(renderer,"image/spaceship.png", "image/engine_flame.png");
 	text = new Text(renderer);
     energyBar = new HUD(renderer, "image/energy_bar.png");
+    explosion = new Explosion(renderer);
 	frame = 0;
 	obstaclesSpawnRate = 25; // minimum rate is 1 per 3 frames
 	coinSpawnRate = 100;
@@ -52,6 +55,8 @@ void Game::Render()
     //clear previous screen
     SDL_RenderClear(renderer);
 
+    //render spaceship
+    Spaceship->Render(frame);
     //iterate through bullet list
     if(!bulletList.empty()){
         std::list<Bullet*>::iterator currentBullet = bulletList.begin();
@@ -69,12 +74,20 @@ void Game::Render()
         (*currentObstacle)->Render();
         //check collision
         if(!bulletList.empty() && SDL_HasIntersection((*bulletList.begin())->getHitBox(),(*currentObstacle)->getHitBox())){
+            //explode
+            for(int i = 0; i < 4; i++){
+                explosion->Render(i,(*currentObstacle)->getHitBox());
+            }
                 currentObstacle = obstaclesList.erase(currentObstacle);
                 bulletList.erase(bulletList.begin());
                 increaseScore(OBSTACLE_BREAK_POINT);
                 continue;
         }
         if((*currentObstacle)->isCollided(Spaceship->getLeftHitBox(), Spaceship->getRightHitBox(), Spaceship->getMainHitBox())){
+            //explode
+            for(int i = 0; i < 4; i++){
+                explosion->Render(i,(*currentObstacle)->getHitBox());
+            }
             // erase returns the iterator following the last removed element
             currentObstacle = obstaclesList.erase(currentObstacle);
             livesLeft--;
@@ -99,7 +112,6 @@ void Game::Render()
             ++currentCoin;
         }
     }
-    Spaceship->Render(frame);
     energyBar->RenderEnergyBar(Spaceship->RemainCooldown(lastShootTime));
     text->DrawText("Score: ", 0, 0, 30);
     text->DrawText(std::to_string(score), 130, 0, 30);
@@ -177,7 +189,6 @@ void Game::HandleInput()
 	if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE)
     {
         if( Spaceship->RemainCooldown(lastShootTime) == SHOOT_COOLDOWN ){
-            std::cout << "shoot" << std::endl;
             bullet = new Bullet(renderer, Spaceship->getMainHitBox());
             bulletList.push_back(bullet);
             lastShootTime = SDL_GetTicks();

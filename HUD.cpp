@@ -19,7 +19,7 @@ void HUD::RenderEnergyBar(int cooldownTime)
         cooldownTime = 4;
     }
     else{
-        cooldownTime =(cooldownTime / (800/5))%5;
+        cooldownTime =(cooldownTime / (SHOOT_COOLDOWN/5))%5;
     }
     setRectSize(renderBox, 1700, 50, 100, 50);
     setRectSize(renderClip, 0, cooldownTime * 200, 380, 200);

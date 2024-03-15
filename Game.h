@@ -8,6 +8,7 @@
 #include "Bullet.h"
 #include "Text.h"
 #include "HUD.h"
+#include "Explosion.h"
 #include <SDL.h>
 #include <iostream>
 #include <list>
@@ -34,6 +35,7 @@ private:
     SDL_Event event;
     SpaceShip* Spaceship;
     HUD* energyBar;
+    Explosion* explosion;
     std::list<Obstacles*> obstaclesList;
     std::list<Coin*> coinList;
     std::list<Bullet*> bulletList;
