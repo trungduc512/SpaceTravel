@@ -37,6 +37,7 @@ private:
     SDL_Event event;
     SpaceShip* Spaceship;
     HUD* energyBar;
+    HUD* healthBar;
     Explosion* explosion;
     std::list<Obstacles*> obstaclesList;
     std::list<Background*> backgroundList;

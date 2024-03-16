@@ -21,7 +21,23 @@ void HUD::RenderEnergyBar(int cooldownTime)
     else{
         cooldownTime =(cooldownTime / (SHOOT_COOLDOWN/5))%5;
     }
-    setRectSize(renderBox, 1700, 50, 100, 50);
+    setRectSize(renderBox, 1698, 50, 100, 50);
     setRectSize(renderClip, 0, cooldownTime * 200, 380, 200);
     SDL_RenderCopy(renderer, texture, &renderClip, &renderBox);
+}
+
+void HUD::RenderHealthBar(unsigned int livesLeft)
+{
+    if (livesLeft != 0) {
+        // Calculate the dimensions for the health bar
+        int barWidth = livesLeft * 30;
+        int clipWidth = livesLeft * 160;
+
+        // Set the position and size of the health bar
+        setRectSize(renderBox, 1700, 25, barWidth, 30);
+        setRectSize(renderClip, 0, 0, clipWidth, 160);
+
+        // Render the health bar texture
+        SDL_RenderCopy(renderer, texture, &renderClip, &renderBox);
+    }
 }

@@ -10,6 +10,7 @@ public:
     ~HUD();
 
     void RenderEnergyBar(int cooldownTime);
+    void RenderHealthBar(unsigned int livesLeft);
 
 private:
     SDL_Texture* texture;

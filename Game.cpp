@@ -6,6 +6,7 @@ Game::Game()
     renderer = NULL;
     Spaceship = NULL;
     energyBar = NULL;
+    healthBar = NULL;
     explosion = NULL;
     text = NULL;
 }
@@ -28,9 +29,11 @@ void Game::NewGame()
     delete Spaceship;
     delete energyBar;
     delete explosion;
+    delete healthBar;
 	Spaceship = new SpaceShip(renderer,"image/spaceship.png", "image/engine_flame.png");
 	text = new Text(renderer);
     energyBar = new HUD(renderer, "image/energy_bar.png");
+    healthBar = new HUD(renderer, "image/health_bar.png");
     explosion = new Explosion(renderer);
 	frame = 0;
 	obstaclesSpawnRate = 25; // minimum rate is 1 per 3 frames
@@ -81,8 +84,6 @@ void Game::Render()
         //render large stars
         currentStar->Render();
     }
-
-
 
     //render spaceship
     Spaceship->Render(frame);
@@ -143,6 +144,7 @@ void Game::Render()
         }
     }
     energyBar->RenderEnergyBar(Spaceship->RemainCooldown(lastShootTime));
+    healthBar->RenderHealthBar(livesLeft);
     text->DrawText("Score: ", 0, 0, 30);
     text->DrawText(std::to_string(score), 130, 0, 30);
     SDL_RenderPresent(renderer);

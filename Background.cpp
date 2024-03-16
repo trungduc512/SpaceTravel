@@ -33,7 +33,7 @@ void Background::Render()
 
 void Background::getRandomBackGround()
 {
-    int pathnum = rand() % 5 + 1;
+    int pathnum = rand() % 8 + 1;
     switch(pathnum)
     {
     case 1:
@@ -51,9 +51,17 @@ void Background::getRandomBackGround()
     case 5:
         path = "image/planet(1).png";
         break;
+    case 6:
+        path = "image/mars.png";
+        break;
+    case 7:
+        path = "image/galaxy(3).png";
+        break;
+    case 8:
+        path = "image/blackhole.png";
+        break;
     default:
         path = "image/earth.png";
         break;
     }
-
 }
