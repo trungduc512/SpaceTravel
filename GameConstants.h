@@ -3,12 +3,20 @@
 
 #include <SDL.h>
 
+const int ACTUAL_WINDOW_WIDTH = 1280;
+const int ACTUAL_WINDOW_HEIGHT = 720;
 const int SCREEN_WIDTH = 1920;
 const int SCREEN_HEIGHT = 1080;
 const int SPACESHIP_MOVE_SPEED = 15;
 const int COIN_POINT = 100;
 const int OBSTACLE_BREAK_POINT = 50;
 const int SHOOT_COOLDOWN = 800;
+const int TIME_TO_NEXT_LEVEL = 10;
+const int SCORE_TO_SPEED_UP = 1500;
+const int MAX_OBSTACLE_SPEED = 20;
+const int MIN_OBSTACLE_SPAWN_RATE = 3;
+const int SCORE_BOARD_X_POS = 10;
+const int SCORE_BOARD_Y_POS = 10;
 const int FPS = 60;
 const int DELAY_TIME = 1000/FPS;
 

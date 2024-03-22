@@ -6,7 +6,7 @@
 class Obstacles : public MovingObject
 {
 public:
-    Obstacles(SDL_Renderer *renderer);
+    Obstacles(SDL_Renderer *renderer, float speed);
     ~Obstacles();
 
     void Render();
@@ -14,6 +14,7 @@ public:
     bool isCollided(const SDL_Rect* leftHitBox, const SDL_Rect* rightHitBox, const SDL_Rect* mainHitBox);
     void getRandomImage();
     SDL_Rect* getHitBox();
+    std::string getPath();
 
 private:
     SDL_Rect Hitbox;

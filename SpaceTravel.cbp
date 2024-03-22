@@ -27,6 +27,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add option="-std=c++17" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -37,6 +38,8 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="Audio.cpp" />
+		<Unit filename="Audio.h" />
 		<Unit filename="Background.cpp" />
 		<Unit filename="Background.h" />
 		<Unit filename="Bullet.cpp" />

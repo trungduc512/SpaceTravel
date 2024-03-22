@@ -1,6 +1,6 @@
 #include "Obstacles.h"
 
-Obstacles::Obstacles(SDL_Renderer *renderer) : MovingObject(renderer)
+Obstacles::Obstacles(SDL_Renderer *renderer, float speed) : MovingObject(renderer)
 {
     getRandomImage();
     SDL_Surface* newSurface = IMG_Load(path.c_str());
@@ -12,7 +12,7 @@ Obstacles::Obstacles(SDL_Renderer *renderer) : MovingObject(renderer)
 	SDL_FreeSurface(newSurface);
     x = rand() % (SCREEN_WIDTH - Box.w); // spawning asteroid randomly base on sreenwidth
 	y = -100;
-	moveSpeed = 10; // default speed = 10
+	moveSpeed = speed; // default speed = 10
     setRectSize(Box, x, y, Box.w, Box.h);
 }
 
@@ -56,4 +56,9 @@ void Obstacles::getRandomImage()
 SDL_Rect* Obstacles::getHitBox()
 {
     return &Hitbox;
+}
+
+std::string Obstacles::getPath()
+{
+    return path;
 }
