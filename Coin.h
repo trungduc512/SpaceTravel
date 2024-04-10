@@ -12,7 +12,7 @@ public:
 
     void Render(unsigned int frame);
     void Update();
-    bool isCollided(const SDL_Rect* leftHitBox, const SDL_Rect* rightHitBox, const SDL_Rect* mainHitBox);
+    SDL_Rect* getHitBox();
 
 private:
     SDL_Rect Hitbox;

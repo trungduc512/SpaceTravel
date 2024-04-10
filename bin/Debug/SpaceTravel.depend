@@ -1,0 +1,140 @@
+# depslib dependency file v1.0
+1709168002 source:c:\users\pc-fptlaptop\documents\codeblock\spacetravel\main.cpp
+	<iostream>
+	"Game.h"
+
+1708958534 source:c:\users\pc-fptlaptop\documents\codeblock\spacetravel\initgame.cpp
+
+1709167867 c:\users\pc-fptlaptop\documents\codeblock\spacetravel\gameconstants.h
+
+1709285357 source:c:\users\pc-fptlaptop\documents\codeblock\spacetravel\game.cpp
+	"Game.h"
+
+1709285346 c:\users\pc-fptlaptop\documents\codeblock\spacetravel\game.h
+	"GameConstants.h"
+	<SDL.h>
+
+1711126789 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\game.cpp
+	"Game.h"
+
+1711120054 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\game.h
+	"GameConstants.h"
+	"SpaceShip.h"
+	"Obstacles.h"
+	"Coin.h"
+	"Bullet.h"
+	"Text.h"
+	"HUD.h"
+	"Explosion.h"
+	"Star.h"
+	"Background.h"
+	"Audio.h"
+	<SDL.h>
+	<iostream>
+	<list>
+	<string>
+
+1711126533 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\gameconstants.h
+	<SDL.h>
+
+1709912601 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\main.cpp
+	"Game.h"
+
+1709467117 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\object.cpp
+	"Object.h"
+
+1710425839 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\object.h
+	<SDL_image.h>
+	<iostream>
+	"GameConstants.h"
+	"UsefulFunctions.h"
+
+1710478527 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\spaceship.h
+	"Object.h"
+	"GameConstants.h"
+	<string>
+
+1711119076 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\spaceship.cpp
+	"SpaceShip.h"
+
+1710252035 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\usefulfunctions.h
+	<SDL.h>
+
+1709716857 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\movingobject.cpp
+	"MovingObject.h"
+
+1710412419 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\movingobject.h
+	"Object.h"
+	"GameConstants.h"
+	<time.h>
+	<stdlib.h>
+
+1710245294 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\asteroid.cpp
+	"Asteroid.h"
+
+1710245507 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\asteroid.h
+	"MovingObject.h"
+	<iostream>
+
+1710252057 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\usefulfunctions.cpp
+	"UsefulFunctions.h"
+
+1711033648 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\obstacles.h
+	"MovingObject.h"
+
+1711033848 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\obstacles.cpp
+	"Obstacles.h"
+
+1710475694 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\coin.cpp
+	"Coin.h"
+
+1710258810 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\coin.h
+	"MovingObject.h"
+	<iostream>
+
+1710430041 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\bullet.cpp
+	"Bullet.h"
+
+1710430027 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\bullet.h
+	"MovingObject.h"
+
+1710430837 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\text.cpp
+	"Text.h"
+
+1710413465 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\text.h
+	<SDL_ttf.h>
+	<iostream>
+	<string>
+	"UsefulFunctions.h"
+
+1710596022 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\hud.h
+	"Object.h"
+
+1710598030 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\hud.cpp
+	"HUD.h"
+
+1710503443 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\explosion.cpp
+	"Explosion.h"
+
+1710501673 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\explosion.h
+	"Object.h"
+
+1710514439 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\star.h
+	"MovingObject.h"
+
+1710515106 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\star.cpp
+	"Star.h"
+
+1710599953 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\background.cpp
+	"Background.h"
+
+1710519142 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\background.h
+	"MovingObject.h"
+
+1710601113 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\audio.h
+	<SDL_mixer.h>
+	<string>
+
+1711115905 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\audio.cpp
+	"Audio.h"
+

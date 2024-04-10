@@ -3,13 +3,9 @@
 Background::Background(SDL_Renderer* renderer) : MovingObject(renderer)
 {
     getRandomBackGround();
-    SDL_Surface* newSurface = IMG_Load(path.c_str());
-    SDL_SetColorKey(newSurface, SDL_TRUE, SDL_MapRGB(newSurface->format, 0, 0, 0));
-    //get texture
-    texture = SDL_CreateTextureFromSurface(renderer, newSurface);
-    Box.w = newSurface->w;
-    Box.h = newSurface->h;
-	SDL_FreeSurface(newSurface);
+    getTexture(texture, renderer, path, 0, 0, 0, width, height);
+    Box.h = height;
+    Box.w = width;
     x = rand() % (SCREEN_WIDTH - Box.w / 2 );
 	y = -Box.h;
 	moveSpeed = 5;

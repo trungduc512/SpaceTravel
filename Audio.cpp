@@ -8,9 +8,11 @@ Audio::~Audio()
 {
 }
 
-void Audio::playSound(std::string filePath)
+void Audio::playSound(std::string filePath, bool soundOn)
 {
-	Mix_Chunk* audioChunk = Mix_LoadWAV(filePath.c_str());
-	Mix_VolumeChunk(audioChunk, 40);
-	Mix_PlayChannel(-1, audioChunk, 0);
+    if(soundOn){
+        Mix_Chunk* audioChunk = Mix_LoadWAV(filePath.c_str());
+        Mix_VolumeChunk(audioChunk, 60);
+        Mix_PlayChannel(-1, audioChunk, 0);
+    }
 }

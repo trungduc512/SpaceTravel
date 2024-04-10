@@ -2,10 +2,7 @@
 
 HUD::HUD(SDL_Renderer* renderer, std::string path) : Object(renderer)
 {
-    SDL_Surface* newSurface = IMG_Load(path.c_str());
-    SDL_SetColorKey(newSurface, SDL_TRUE, SDL_MapRGB(newSurface->format, 69, 69, 69));
-    texture = SDL_CreateTextureFromSurface(renderer, newSurface);
-    SDL_FreeSurface(newSurface);
+    getTexture(texture,renderer, path, 69, 69, 69);
 }
 
 HUD::~HUD()

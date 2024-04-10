@@ -2,15 +2,10 @@
 
 Coin::Coin(SDL_Renderer *renderer, std::string path) : MovingObject(renderer)
 {
-    SDL_Surface* newSurface = IMG_Load(path.c_str());
-    SDL_SetColorKey(newSurface, SDL_TRUE, SDL_MapRGB(newSurface->format, 0, 0, 0));
-    //get texture
-    texture = SDL_CreateTextureFromSurface(renderer, newSurface);
+    getTexture(texture, renderer, path, 0, 0, 0);
     //get renderBox size
     Box.w = 60;
     Box.h = 60;
-
-	SDL_FreeSurface(newSurface);
 
 	// spawning coin randomly base on sreenwidth
     x = rand() % (SCREEN_WIDTH - Box.w);
@@ -41,10 +36,7 @@ void Coin::Render( unsigned int frame )
     //SDL_RenderDrawRect(renderer, &Hitbox);
 }
 
-bool Coin::isCollided(const SDL_Rect* leftHitBox, const SDL_Rect* rightHitBox, const SDL_Rect* mainHitBox)
+SDL_Rect* Coin::getHitBox()
 {
-    if(SDL_HasIntersection(&Hitbox, leftHitBox)) return true;
-    if(SDL_HasIntersection(&Hitbox, rightHitBox)) return true;
-    if(SDL_HasIntersection(&Hitbox, mainHitBox)) return true;
-    return false;
+    return &Hitbox;
 }

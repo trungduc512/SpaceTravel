@@ -12,6 +12,7 @@ public:
 	Text(SDL_Renderer* renderer);
 
 	void DrawText(std::string text, int x, int y, int fontSize);
+	void DrawText(std::string text, int x, int y, int fontSize, double angle);
 
 private:
 	SDL_Renderer* renderer;

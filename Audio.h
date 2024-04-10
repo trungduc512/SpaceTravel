@@ -10,7 +10,7 @@ public:
 	Audio();
 	~Audio();
 
-	void playSound(std::string filePath);
+	void playSound(std::string filePath, bool soundOn);
 };
 
 #endif // AUDIO_H_INCLUDED

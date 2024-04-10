@@ -2,26 +2,22 @@
 
 SpaceShip::SpaceShip(SDL_Renderer* renderer, std::string path1, std::string path2):Object(renderer)
 {
-    //get ship image
-    SDL_Surface* shipSurface = IMG_Load(path1.c_str());
-    SDL_SetColorKey (shipSurface, SDL_TRUE, SDL_MapRGB(shipSurface->format, 69, 69, 69));
-    shipTexture = SDL_CreateTextureFromSurface(renderer, shipSurface);
-    //get flame spritesheet
-    SDL_Surface*  flameSurface = IMG_Load(path2.c_str());
-    SDL_SetColorKey (flameSurface, SDL_TRUE, SDL_MapRGB(flameSurface->format, 69, 69, 69));
-    flameTexture = SDL_CreateTextureFromSurface(renderer, flameSurface);
-    //get the spaceship to the middle of the screen
-    renderBox.w = shipSurface->w;
-    renderBox.h = shipSurface->h;
-    //free unused surface
-    SDL_FreeSurface(shipSurface);
-    SDL_FreeSurface(flameSurface);
+    getTexture(shipTexture, renderer, path1, 69, 69, 69, width, height);
+    getTexture(flameTexture, renderer, path2, 69, 69, 69);
+    getTexture(shieldTexture, renderer, "image/shield.png", 69, 69, 69);
+    renderBox.w = width;
+    renderBox.h = height;
+
     //set initial position for the spaceship
-	x = (SCREEN_WIDTH / 2) - (renderBox.w / 2);
+	x = (SCREEN_WIDTH / 2) - (85 / 2);
 	y = SCREEN_HEIGHT * 0.80;
+
 	//set width and height for the image
 	width = 85;
 	height = 85;
+	shielded = 0;
+	died = 0;
+	coinEatToGetShield = 0;
 }
 
 SpaceShip::~SpaceShip()
@@ -41,12 +37,18 @@ void SpaceShip::Render(unsigned int frame)
     setRectSize(leftHitbox, x, y + 40, 30, 35);
     setRectSize(rightHitbox, x + 55, y + 40, 30, 35);
 
-//	Render Hitbox (for bug fixing only)
-//	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-//	SDL_RenderDrawRect(renderer, &flame);
-//	SDL_RenderDrawRect(renderer, &leftHitbox);
-//	SDL_RenderDrawRect(renderer, &mainHitbox);
-//	SDL_RenderDrawRect(renderer, &rightHitbox);
+    //Render Hitbox (for bug fixing only)
+    //SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    //SDL_RenderDrawRect(renderer, &flame);
+    //SDL_RenderDrawRect(renderer, &leftHitbox);
+    //SDL_RenderDrawRect(renderer, &mainHitbox);
+    //SDL_RenderDrawRect(renderer, &rightHitbox);
+}
+
+void SpaceShip::RenderShield()
+{
+    setRectSize(renderBox2, x - width*0.125, y - height*0.125, width * 1.25, height * 1.25);
+    SDL_RenderCopy(renderer, shieldTexture, NULL, &renderBox2);
 }
 
 void SpaceShip::moveUp()
@@ -95,4 +97,23 @@ SDL_Rect* SpaceShip::getRightHitBox()
 SDL_Rect* SpaceShip::getMainHitBox()
 {
     return &mainHitbox;
+}
+
+bool SpaceShip::isCollided(const SDL_Rect *Hitbox)
+{
+    if(SDL_HasIntersection(Hitbox, &leftHitbox))return true;
+    if(SDL_HasIntersection(Hitbox, &leftHitbox)) return true;
+    if(SDL_HasIntersection(Hitbox, &mainHitbox)) return true;
+    return false;
+}
+
+void SpaceShip::increaseCoinEatToGetShield()
+{
+    coinEatToGetShield++;
+    if(coinEatToGetShield > 5) {
+        coinEatToGetShield = 5;
+    }
+    if(coinEatToGetShield == 5){
+        shielded = 1;
+    }
 }

@@ -11,6 +11,7 @@ Game::Game()
     text = NULL;
     music = NULL;
     audio = NULL;
+    boss = NULL;
 }
 
 bool Game::Init()
@@ -19,8 +20,7 @@ bool Game::Init()
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
     TTF_Init();
     Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
-    lastShootTime = 0;
-    window = SDL_CreateWindow( "test", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, ACTUAL_WINDOW_WIDTH, ACTUAL_WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI);
+    window = SDL_CreateWindow( "SpaceTravel", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, ACTUAL_WINDOW_WIDTH, ACTUAL_WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI);
     if( window == NULL ) return false;
     renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
     if( renderer == NULL ) return false;
@@ -37,6 +37,12 @@ bool Game::Init()
     }
     //close file handler
     SDL_RWclose( file );
+    //init menu
+    mainMenu = new MainMenu(renderer);
+    quitMenu = new Menu(renderer);
+    quit = false;
+    soundOn = true;
+    pauseMenu = new PauseMenu(renderer);
     return true;
 }
 
@@ -51,42 +57,101 @@ void Game::NewGame()
     energyBar = new HUD(renderer, "image/energy_bar.png");
     healthBar = new HUD(renderer, "image/health_bar.png");
     explosion = new Explosion(renderer);
-    Mix_VolumeMusic(30);
-    music = Mix_LoadMUS("sound/spacemusic.wav");
-    if (music == NULL) {
-    printf("Failed to load music! SDL_mixer Error: %s\n", Mix_GetError());
-    // Handle loading failure
+    getTexture(warningTexture, renderer, "image/warning.png", 69, 69, 69);
+    getTexture(laserTexture, renderer, "image/laser.png", 0, 0, 0);
+    if(soundOn){
+        Mix_VolumeMusic(20);
     }
+    music = Mix_LoadMUS("sound/spacemusic.wav");
     Mix_PlayingMusic();
     Mix_PlayMusic(music, -1);
 	frame = 0;
-	obstaclesSpawnRate = 25;// minimum rate is 1 per 3 frames
-	obstacleMoveSpeed = 10;
-	coinSpawnRate = 100;
-	starSpawnRate = 2;
-	largeStarSpawnRate = 3;
-	backgroundSpawnRate = 150;
+	obstaclesSpawnRate = INIT_OBSTACLE_SPAWN_RATE;// minimum rate is 1 per 3 frames
+	obstacleMoveSpeed = INIT_OBSTACLE_MOVE_SPEED;
+	Spaceship->died = false;
+	quitMenu->quitGame = 0;
+	quitMenu->playAgain = 0;
+	coinSpawnRate = COIN_SPAWN_RATE;
+	starSpawnRate = STAR_SPAWN_RATE;
+	largeStarSpawnRate = LARGE_STAR_SPAWN_RATE;
+	backgroundSpawnRate = BACKGROUND_SPAWN_RATE;
 	livesLeft = 3;
 	score = 0;
 	isPause = 0;
-	if(!obstaclesList.empty()){
-        obstaclesList.erase(obstaclesList.begin(),obstaclesList.end());
-	}
-    if(!coinList.empty()){
-        coinList.erase(coinList.begin(),coinList.end());
-	}
-    if(!bulletList.empty()){
-        bulletList.erase(bulletList.begin(),bulletList.end());
-	}
-    if(!starList.empty()){
-        starList.erase(starList.begin(),starList.end());
-	}
-    if(!largeStarList.empty()){
-        largeStarList.erase(largeStarList.begin(),largeStarList.end());
-	}
-    if(!backgroundList.empty()){
-        backgroundList.erase(backgroundList.begin(),backgroundList.end());
-	}
+	lastShootTime = 0;
+	pos = 0;
+	laserOn = 0;
+	laserContact = 0;
+	hasBoss = 0;
+	level = 1;
+	levelUpdate1 = 0;
+	levelUpdate2 = 0;
+	timer.start();
+	bossTimer.start();
+
+    ClearList<Obstacles*>(obstaclesList);
+    ClearList<Bullet*>(bulletList);
+    ClearList<Star*>(starList);
+    ClearList<Star*>(largeStarList);
+    ClearList<Background*>(backgroundList);
+    ClearList<Coin*>(coinList);
+}
+
+void Game::Run()
+{
+    //render main menu
+    while(mainMenu->play == false && quit == false){
+        if( SDL_PollEvent( &event ) != 0)
+        {
+            if( event.type == SDL_QUIT ) quit = true;
+        }
+        StartGame();
+    }
+
+    //start new game
+    NewGame();
+
+    //gameloop
+    while( quit == false )
+    {
+        frameStart = SDL_GetTicks();
+        if( SDL_PollEvent( &event ) != 0)
+        {
+            if( event.type == SDL_QUIT ) quit = true;
+        }
+
+        //check if the game is paused
+        PauseHandle();
+        //update and render
+        if(!isPause){
+            if(Spaceship->died == false){
+                Update();
+                Render();
+                frame++;
+            }
+            else {
+                GameOver();
+                frame++;
+            }
+        }
+
+        else {
+            Pause();
+        }
+        if(soundOn){
+            Mix_VolumeMusic(20);
+        }
+        else{
+            Mix_VolumeMusic(0);
+        }
+        //stable fps
+        frameTime = SDL_GetTicks() - frameStart;
+        if (frameTime < DELAY_TIME)
+        {
+            SDL_Delay(DELAY_TIME - frameTime);
+        }
+    }
+    Quit();
 }
 
 void Game::Render()
@@ -115,6 +180,37 @@ void Game::Render()
     //render spaceship
     Spaceship->Render(frame);
 
+    if(Spaceship->shielded == true){
+        Spaceship->RenderShield();
+    }
+    //render laser
+    if(NewLaser() || laserOn){
+        if(laserTimer.getTicks() == 0) {
+            audio->playSound("sound/LaserSound1.wav",soundOn);
+        }
+        if(laserTimer.getTicks() <= WARNING_TIME) {
+            RenderWarning();
+        }
+
+        else {
+            RenderLaser();
+            //debug
+            //SDL_SetRenderDrawColor(renderer, 226, 33, 33, 255);
+            //SDL_RenderDrawRect(renderer, &laserHitbox);
+            if(Spaceship->isCollided(&laserHitbox) && laserContact == 0){
+                audio->playSound("sound/LaserSoundHit.wav",soundOn);
+                laserContact = 1;
+                livesDecrease();
+            }
+        }
+
+        if(laserTimer.getTicks() > WARNING_TIME + LASER_DURATION){
+            laserOn = 0;
+            laserContact = 0;
+            laserTimer.stop();
+        }
+    }
+
     //iterate through bullet list
     if(!bulletList.empty()){
         std::list<Bullet*>::iterator currentBullet = bulletList.begin();
@@ -125,31 +221,61 @@ void Game::Render()
         }
     }
 
+
+
+    //check bullet collision with obstacles
+    if(!bulletList.empty()){
+        std::list<Bullet*>::iterator currentBullet = bulletList.begin();
+        while (currentBullet != bulletList.end()) {
+            bool checkBulletCollision = 0;
+            std::list<Obstacles*>::iterator currentObstacle = obstaclesList.begin();
+            while(currentObstacle != obstaclesList.end()){
+                if(SDL_HasIntersection((*currentBullet)->getHitBox(),(*currentObstacle)->getHitBox())){
+                    //explode
+                    for(int i = 0; i < 4; i++){
+                        explosion->Render(i,(*currentObstacle)->getHitBox());
+                    }
+                    //currentBullet = bulletList.erase(currentBullet);
+                    currentObstacle = obstaclesList.erase(currentObstacle);
+                    currentBullet = bulletList.erase(currentBullet);
+                    checkBulletCollision = 1;
+                    increaseScore(OBSTACLE_BREAK_POINT);
+                    audio->playSound("sound/AsteroidHit.wav",soundOn);
+                    break;
+                }
+                else{
+                    ++currentObstacle;
+                }
+            }
+            if(!checkBulletCollision)
+                ++currentBullet;
+        }
+    }
+
     //iterate through obstacles list
     std::list<Obstacles*>::iterator currentObstacle = obstaclesList.begin();
     while (currentObstacle != obstaclesList.end()){
-        //render asteroid
+        //render obstacles
         (*currentObstacle)->Render();
-        //check collision
-        if(!bulletList.empty() && SDL_HasIntersection((*bulletList.begin())->getHitBox(),(*currentObstacle)->getHitBox())){
-            //explode
-            for(int i = 0; i < 4; i++){
-                explosion->Render(i,(*currentObstacle)->getHitBox());
+        //check spaceship collision
+        if(Spaceship->isCollided((*currentObstacle)->getHitBox())){
+            if((*currentObstacle)->getPath() == "image/amogus.png"){
+                livesLeft++;
+                if(livesLeft > 3){
+                    livesLeft = 3;
+                }
+                currentObstacle = obstaclesList.erase(currentObstacle);
             }
-            audio->playSound("sound/AsteroidHit.wav");
-            currentObstacle = obstaclesList.erase(currentObstacle);
-            bulletList.erase(bulletList.begin());
-            increaseScore(OBSTACLE_BREAK_POINT);
-            continue;
-        }
-        if((*currentObstacle)->isCollided(Spaceship->getLeftHitBox(), Spaceship->getRightHitBox(), Spaceship->getMainHitBox())){
+            else{
             //explode
-            for(int i = 0; i < 4; i++){
-                explosion->Render(i,(*currentObstacle)->getHitBox());
+                for(int i = 0; i < 4; i++){
+                    explosion->Render(i,(*currentObstacle)->getHitBox());
+                }
+                // erase returns the iterator following the last removed element
+                currentObstacle = obstaclesList.erase(currentObstacle);
+                audio->playSound("sound/crash.wav",soundOn);
+                livesDecrease();
             }
-            // erase returns the iterator following the last removed element
-            currentObstacle = obstaclesList.erase(currentObstacle);
-            livesLeft--;
         }
         else {
             ++currentObstacle;
@@ -162,73 +288,123 @@ void Game::Render()
         //render asteroid
         (*currentCoin)->Render(frame);
         //check collision
-        if((*currentCoin)->isCollided(Spaceship->getLeftHitBox(), Spaceship->getRightHitBox(), Spaceship->getMainHitBox())){
+        if(Spaceship->isCollided((*currentCoin)->getHitBox())){
             // erase returns the iterator following the last removed element
             currentCoin = coinList.erase(currentCoin);
             increaseScore(COIN_POINT);
-            audio->playSound("sound/CoinEaten.wav");
+            Spaceship->increaseCoinEatToGetShield();
+            audio->playSound("sound/CoinEaten.wav",soundOn);
         }
         else {
             ++currentCoin;
         }
     }
+    if(NewBoss() || hasBoss){
+        boss->Render();
+        if(!bulletList.empty()){
+            std::list<Bullet*>::iterator currentBullet = bulletList.begin();
+            while (currentBullet != bulletList.end()) {
+                if(SDL_HasIntersection(boss->getHitBox(),(*currentBullet)->getHitBox())){
+                    boss->DecreaseLives();
+                    currentBullet = bulletList.erase(currentBullet);
+                    continue;
+                }
+                else{
+                    ++currentBullet;
+                }
+            }
+        }
+        if(boss->getHitBox()->y + boss->getHitBox()->w < 0 && !boss->alive){
+            hasBoss = 0;
+            increaseScore(BOSS_DEFEAT_POINT);
+            bossTimer.start();
+        }
+        if(!boss->bossBulletList.empty()){
+            std::list<Bullet*>::iterator currentBullet = boss->bossBulletList.begin();
+            while (currentBullet != boss->bossBulletList.end()) {
+                if(Spaceship->isCollided((*currentBullet)->getHitBox())){
+                    for(int i = 0; i < 4; i++){
+                        explosion->Render(i,(*currentBullet)->getHitBox());
+                    }
+                    livesDecrease();
+                    currentBullet = boss->bossBulletList.erase(currentBullet);
+                }
+                else{
+                    ++currentBullet;
+                }
+            }
+        }
+    }
+
     energyBar->RenderEnergyBar(Spaceship->RemainCooldown(lastShootTime));
     healthBar->RenderHealthBar(livesLeft);
     text->DrawText("Score: ", SCORE_BOARD_X_POS, SCORE_BOARD_Y_POS, 30);
     text->DrawText(std::to_string(score), SCORE_BOARD_X_POS + 130, SCORE_BOARD_Y_POS, 30);
     text->DrawText("Best: ", SCORE_BOARD_X_POS, SCORE_BOARD_Y_POS + 35, 30);
     text->DrawText(std::to_string(bestScore),SCORE_BOARD_X_POS + 130, SCORE_BOARD_Y_POS + 35, 30);
+    text->DrawText("Level: ",SCORE_BOARD_X_POS, SCORE_BOARD_Y_POS + 70, 30);
+    text->DrawText(std::to_string(level),SCORE_BOARD_X_POS + 130, SCORE_BOARD_Y_POS + 70, 30);
+    text->DrawText("Time survived: ",SCORE_BOARD_X_POS, SCORE_BOARD_Y_POS + 105, 30);
+    text->DrawText(std::to_string((timer.getSeconds())),SCORE_BOARD_X_POS + 300, SCORE_BOARD_Y_POS + 105, 30);
     SDL_RenderPresent(renderer);
 }
 
-void Game::Run()
+void Game::RenderLaser()
 {
-    NewGame();
-    bool quit = false;
-    while( quit == false )
-    {
-        frameStart = SDL_GetTicks();
-        if( SDL_PollEvent( &event ) != 0)
-        {
-            if( event.type == SDL_QUIT || event.key.keysym.sym == SDLK_ESCAPE ) quit = true;
-        }
-
-        //check if the game is paused
-        PauseHandle();
-
-        //update and render
-        if(!isPause){
-            Update();
-            Render();
-            frame++;
-        }
-
-        //stable fps
-        frameTime = SDL_GetTicks() - frameStart;
-		if (frameTime < DELAY_TIME)
-		{
-			SDL_Delay(DELAY_TIME - frameTime);
-		}
-
-        //debug
-        //std::cout << frame << std::endl;
-        //std::cout << obstaclesList.size() << std::endl;
-        //std::cout << bulletList.size() << std::endl;
-        //std::cout << obstaclesSpawnRate << std::endl;
-        //std::cout << obstacleMoveSpeed << std::endl;
-    }
-    Quit();
+    SDL_Rect renderRect;
+    SDL_Rect clipRect;
+    setRectSize(clipRect, frame % 2, 0, 80, 160);
+    setRectSize(renderRect, pos - SCREEN_HEIGHT / 4 , 0, SCREEN_HEIGHT / 2, SCREEN_HEIGHT);
+    SDL_RenderCopy(renderer, laserTexture, &clipRect, &renderRect);
 }
+
+void Game::RenderWarning()
+{
+    SDL_Rect renderRect;
+    setRectSize(renderRect, pos - 40, 40, 50, 50);
+    if((frame / 20) % 2 == 0){
+        SDL_RenderCopy(renderer, warningTexture, NULL, &renderRect);
+        //SDL_RenderDrawRect(renderer,&laserHitbox);
+    }
+}
+
+bool Game::NewLaser()
+{
+    if(frame % ( LASER_SPAWN_RATE ) == 0 && frame != 0){
+        laserOn = 1;
+        laserTimer.start();
+        pos = Spaceship->x + Spaceship->width / 2;
+        setRectSize(laserHitbox, pos - SCREEN_HEIGHT / 8 , 0, SCREEN_HEIGHT / 4 - 45, SCREEN_HEIGHT);
+        return 1;
+    }
+    return 0;
+}
+
+//test
+bool Game::NewBoss()
+{
+    if(bossTimer.getSeconds() == BOSS_SPAWN_TIME){
+        if(boss != NULL)
+            delete boss;
+        boss = new Boss(renderer,level);
+        bossTimer.stop();
+        hasBoss = 1;
+        return 1;
+    }
+    return 0;
+}
+//end test
+
+
 
 void Game::Update()
 {
     if(livesLeft == 0){
         SDL_Delay(1000);
-        NewGame();
+        Spaceship->died = true;
     }
 
     HandleInput();
-
     updateLevel();
 
     if(frame % obstaclesSpawnRate == 0){
@@ -257,6 +433,11 @@ void Game::Update()
     }
     KeepInScreen(Spaceship);
     UpdateList();
+    if(NewBoss() || hasBoss){
+        boss->Update();
+        if(frame % BOSS_SHOOT_RATE == 0 && boss->alive)
+            boss->LoadBullet(Spaceship->getMainHitBox());
+    }
 }
 
 void Game::HandleInput()
@@ -296,36 +477,39 @@ void Game::KeepInScreen(Object* object)
     if(object->y + object->height > SCREEN_HEIGHT) object->y = SCREEN_HEIGHT - object->height;
 }
 
+template <typename Container>
+void Game::UpdateList(std::list<Container> &checklist){
+    typename std::list<Container>::iterator current = checklist.begin();
+    while (current != checklist.end()){
+        //Check if off screen
+        if ((*current)->Box.y > SCREEN_HEIGHT)
+        {
+            delete(*current);
+            // erase returns the iterator following the last removed element
+            current = checklist.erase(current);
+        }
+        else {
+            (*current)->Update();
+            ++current;
+        }
+    }
+}
+
+template <typename Container>
+void Game::ClearList(std::list<Container> &checklist)
+{
+    if(!checklist.empty()){
+            checklist.erase(checklist.begin(),checklist.end());
+	}
+}
+
 void Game::UpdateList()
 {
-    std::list<Star*>::iterator currentStar = starList.begin();
-    while (currentStar != starList.end()){
-        //Check if obstacle is off screen
-        if ((*currentStar)->Box.y > SCREEN_HEIGHT)
-        {
-            delete(*currentStar);
-            // erase returns the iterator following the last removed element
-            currentStar = starList.erase(currentStar);
-        }
-        else {
-            (*currentStar)->Update();
-            ++currentStar;
-        }
-    }
-    std::list<Star*>::iterator currentLargeStar = largeStarList.begin();
-    while (currentLargeStar != largeStarList.end()){
-        //Check if large star is off screen
-        if ((*currentLargeStar)->Box.y > SCREEN_HEIGHT)
-        {
-            delete(*currentLargeStar);
-            // erase returns the iterator following the last removed element
-            currentLargeStar = largeStarList.erase(currentLargeStar);
-        }
-        else {
-            (*currentLargeStar)->Update();
-            ++currentLargeStar;
-        }
-    }
+    UpdateList<Star*>(starList);
+    UpdateList<Star*>(largeStarList);
+    UpdateList<Coin*>(coinList);
+    UpdateList<Background*>(backgroundList);
+    UpdateList<Bullet*>(bulletList);
     std::list<Obstacles*>::iterator currentObstacle = obstaclesList.begin();
     while (currentObstacle != obstaclesList.end()){
         //Check if obstacle is off screen
@@ -342,48 +526,6 @@ void Game::UpdateList()
             ++currentObstacle;
         }
     }
-    std::list<Coin*>::iterator currentCoin = coinList.begin();
-    while (currentCoin != coinList.end()){
-        //Check if coin is off screen
-        if ((*currentCoin)->Box.y > SCREEN_HEIGHT)
-        {
-            delete(*currentCoin);
-            // erase returns the iterator following the last removed element
-            currentCoin = coinList.erase(currentCoin);
-        }
-        else {
-            (*currentCoin)->Update();
-            ++currentCoin;
-        }
-    }
-
-    std::list<Bullet*>::iterator currentBullet = bulletList.begin();
-    while (currentBullet != bulletList.end()) {
-    // Check if bullet is off screen
-        if ((*currentBullet)->Box.y < 0) {
-            delete (*currentBullet);
-            // erase returns the iterator following the last removed element
-            currentBullet = bulletList.erase(currentBullet);
-        }
-        else {
-            (*currentBullet)->Update();
-            ++currentBullet;
-        }
-    }
-
-    std::list<Background*>::iterator currentBackground = backgroundList.begin();
-    while (currentBackground != backgroundList.end()) {
-    // Check if background is off screen
-        if ((*currentBackground)->Box.y > SCREEN_HEIGHT) {
-            delete (*currentBackground);
-            // erase returns the iterator following the last removed element
-            currentBackground = backgroundList.erase(currentBackground);
-        }
-        else {
-            (*currentBackground)->Update();
-            ++currentBackground;
-        }
-    }
 }
 
 void Game::increaseScore(const int scoreGet)
@@ -394,8 +536,20 @@ void Game::increaseScore(const int scoreGet)
     }
 }
 
+void Game::livesDecrease()
+{
+    if(Spaceship->shielded == false){
+        livesLeft--;
+    }
+    else {
+        Spaceship->shielded = false;
+        Spaceship->coinEatToGetShield = 0;
+    }
+}
+
 void Game::Quit()
 {
+    freePointers();
     //save best score
     file = SDL_RWFromFile( "bestscore.bin", "w+b" );
     SDL_RWwrite( file, &bestScore, sizeof(Sint32), 1 );
@@ -413,15 +567,25 @@ void Game::Quit()
 void Game::PauseHandle()
 {
     if(isPause) {
-        if(event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_p) {
-        Mix_ResumeMusic();
-        isPause = 0;
+        if(pauseMenu->resume) {
+            pauseMenu->resume = 0;
+            Mix_ResumeMusic();
+            Mix_Resume(-1);
+            isPause = 0;
+            timer.unpause();
+            bossTimer.unpause();
+            laserTimer.unpause();
         }
+
     }
     else {
-        if(event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_p) {
-        Mix_PauseMusic();
-        isPause = 1;
+        if(event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE) {
+            Mix_PauseMusic();
+            Mix_Pause(-1);
+            isPause = 1;
+            timer.pause();
+            bossTimer.pause();
+            laserTimer.pause();
         }
     }
 }
@@ -431,6 +595,7 @@ void Game::updateLevel()
     //increase spawn rate of obstacles
     if(frame % (TIME_TO_NEXT_LEVEL*60) == 0) {
         obstaclesSpawnRate--;
+        levelUpdate1 = 1;
         if(obstaclesSpawnRate < MIN_OBSTACLE_SPAWN_RATE) {
             obstaclesSpawnRate = MIN_OBSTACLE_SPAWN_RATE;
         }
@@ -441,9 +606,73 @@ void Game::updateLevel()
     if(score / SCORE_TO_SPEED_UP > lastIncreaseSpeed) {
         obstacleMoveSpeed += 0.5 * (score/SCORE_TO_SPEED_UP);
         lastIncreaseSpeed++;
+        levelUpdate2 = 1;
         if(obstacleMoveSpeed > MAX_OBSTACLE_SPEED) {
             obstacleMoveSpeed = MAX_OBSTACLE_SPEED;
         }
     }
+    if(levelUpdate1 && levelUpdate2){
+        level++;
+        levelUpdate1 = 0;
+        levelUpdate2 = 0;
+    }
 }
 
+void Game::GameOver()
+{
+    Mix_HaltMusic();
+    quitMenu->HandleMenuEvent(event);
+    quitMenu->RenderMenu(frame);
+    if(quitMenu->playAgain) {
+        NewGame();
+        SDL_Delay(50);
+    }
+    if(quitMenu->quitGame) {
+        quit = true;
+    }
+}
+
+void Game::Pause()
+{
+    pauseMenu->GetSoundState(soundOn);
+    pauseMenu->HandleMenuEvent(event);
+    pauseMenu->RenderMenu();
+    if(pauseMenu->quitGame){
+        quit = true;
+    }
+    if(pauseMenu->soundChange){
+        soundOn = !soundOn;
+        pauseMenu->soundChange = false;
+    }
+}
+
+void Game::StartGame()
+{
+    mainMenu->HandleMenuEvent(event);
+    mainMenu->RenderMenu(bestScore);
+    if(mainMenu->quitGame) {
+        quit = true;
+    }
+    if(mainMenu->resetHighscore) {
+        bestScore = 0;
+        mainMenu->resetHighscore = false;
+    }
+    if(mainMenu->soundChange){
+        soundOn = !soundOn;
+        mainMenu->soundChange = false;
+    }
+}
+
+void Game::freePointers()
+{
+    delete boss;
+    delete quitMenu;
+    delete mainMenu;
+    delete pauseMenu;
+    delete Spaceship;
+    delete energyBar;
+    delete healthBar;
+    delete explosion;
+    delete text;
+    delete audio;
+}

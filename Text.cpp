@@ -26,3 +26,25 @@ void Text::DrawText(std::string text, int x, int y, int fontSize)
 	SDL_FreeSurface(surface);
 	TTF_CloseFont(font);
 }
+
+void Text::DrawText(std::string text, int x, int y, int fontSize, double angle)
+{
+	TTF_Font* font = TTF_OpenFont("font/JackPixel.ttf", fontSize);
+
+	SDL_Color fg = { 255,255,255 };
+	SDL_Surface* surface = TTF_RenderText_Solid(font, text.c_str(), fg);
+    //get text texture
+	SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+    //get the text
+	SDL_Rect sizeRect;
+	setRectSize(sizeRect, 0, 0, surface->w, surface->h);
+    //set postion & size for the text
+	SDL_Rect posRect;
+	setRectSize(posRect, x, y, sizeRect.w, sizeRect.h);
+    //render the text
+    SDL_RenderCopyEx(renderer, texture, &sizeRect, &posRect, angle, NULL, SDL_FLIP_NONE);
+	//quit system
+	SDL_DestroyTexture(texture);
+	SDL_FreeSurface(surface);
+	TTF_CloseFont(font);
+}
