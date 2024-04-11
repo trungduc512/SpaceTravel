@@ -48,7 +48,6 @@ public:
     bool NewBoss();
     void PauseHandle();
     void updateLevel();
-    void livesDecrease();
     void freePointers();
 
 private:
@@ -84,9 +83,9 @@ private:
     unsigned int largeStarSpawnRate;
     unsigned int starSpawnRate;
     unsigned int backgroundSpawnRate;
-    unsigned int livesLeft;
     unsigned int volume;
     unsigned int level;
+    unsigned int coinCounted;
     float obstacleMoveSpeed;
     Uint32 lastShootTime;
     Uint32 frameStart;
@@ -110,6 +109,7 @@ private:
 	bool levelUpdate2;
 	SDL_Rect laserHitbox;
 	int pos;
+	int lastIncreaseSpeed;
 };
 
 #endif // GAME_H_INCLUDED

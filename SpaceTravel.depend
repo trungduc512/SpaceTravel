@@ -14,10 +14,10 @@
 	"GameConstants.h"
 	<SDL.h>
 
-1712773463 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\game.cpp
+1712863090 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\game.cpp
 	"Game.h"
 
-1712772960 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\game.h
+1712863933 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\game.h
 	"GameConstants.h"
 	"SpaceShip.h"
 	"Obstacles.h"
@@ -39,7 +39,7 @@
 	<list>
 	<string>
 
-1712716964 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\gameconstants.h
+1712860907 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\gameconstants.h
 	<SDL.h>
 
 1711473458 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\main.cpp
@@ -54,12 +54,12 @@
 	"GameConstants.h"
 	"UsefulFunctions.h"
 
-1711549983 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\spaceship.h
+1712863181 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\spaceship.h
 	"Object.h"
 	"GameConstants.h"
 	<string>
 
-1712684258 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\spaceship.cpp
+1712863155 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\spaceship.cpp
 	"SpaceShip.h"
 
 1711379211 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\usefulfunctions.h
@@ -92,10 +92,10 @@
 1712721982 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\obstacles.cpp
 	"Obstacles.h"
 
-1711381314 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\coin.cpp
+1712862002 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\coin.cpp
 	"Coin.h"
 
-1711381269 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\coin.h
+1712860825 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\coin.h
 	"MovingObject.h"
 	<iostream>
 
@@ -139,11 +139,11 @@
 1710519142 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\background.h
 	"MovingObject.h"
 
-1711903386 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\audio.h
+1712830585 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\audio.h
 	<SDL_mixer.h>
 	<string>
 
-1711903350 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\audio.cpp
+1712830573 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\audio.cpp
 	"Audio.h"
 
 1711904986 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\button.cpp
@@ -171,10 +171,10 @@
 1711907017 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\mainmenu.cpp
 	"MainMenu.h"
 
-1712772949 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\boss.cpp
+1712834832 source:c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\boss.cpp
 	"Boss.h"
 
-1712772938 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\boss.h
+1712833588 c:\users\pc-fptlaptop\documents\github sdl_game upload\spacetravel\boss.h
 	"MovingObject.h"
 	"Bullet.h"
 	<list>

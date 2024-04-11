@@ -2,12 +2,14 @@
 
 Boss::Boss(SDL_Renderer *renderer,unsigned int level) : MovingObject(renderer)
 {
-    getTexture(texture, renderer, "image/boss.png", 69, 69, 69, width, height);
+    getTexture(texture, renderer, "image/monster_sprite_sheet.png", 69, 69, 69);//width, height
+    width = 400;
+    height = 400;
     getTexture(healthBarTexture, renderer, "image/Boss_health_bar.png", 69, 69, 69);
     moveSpeed = 3;
     x_movespeed = 5;
     appear = 0;
-    setRectSize(Hitbox, rand()%(SCREEN_WIDTH - (int)width), -100, width, height);
+    setRectSize(RenderBox, rand()%(SCREEN_WIDTH - (int)width), -400, width, height);
     alive = 1;
     livesLeft = BOSS_BASE_HEALTH + level * BOSS_SCALE_HEALTH;
     firstLivesLeft = livesLeft;
@@ -22,32 +24,50 @@ Boss::~Boss()
 void Boss::Render()
 {
     setRectSize(ClipBox, 0, 0, livesLeft * (700 / firstLivesLeft), 188 ); // width 700, height 188
-    setRectSize(HealthBarBox,Hitbox.x + 50, Hitbox.y + 175, livesLeft * (150 / firstLivesLeft), 10); // suit
+    setRectSize(HealthBarBox,RenderBox.x + 50, RenderBox.y + 175, livesLeft * (150 / firstLivesLeft), 10); // suit
     SDL_RenderCopy(renderer,texture,NULL,&Hitbox);
     if(alive)
         SDL_RenderCopy(renderer,healthBarTexture,&ClipBox,&HealthBarBox);
     for(Bullet* currentBossBullet : bossBulletList){
         currentBossBullet->RenderEx();
     }
+//    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+//    SDL_RenderDrawRect(renderer,&RenderBox);
+}
+
+void Boss::Render(unsigned int frame)
+{
+    setRectSize(bossClipBox, 0, ((frame / 5)%34) * 400, 400, 400);
+    setRectSize(ClipBox, 0, 0, livesLeft * (700 / firstLivesLeft), 188 ); // width 700, height 188
+    setRectSize(HealthBarBox,RenderBox.x + 50, RenderBox.y + 175, livesLeft * (150 / firstLivesLeft), 10); // suit
+    SDL_RenderCopy(renderer,texture,&bossClipBox,&RenderBox);
+    if(alive)
+        SDL_RenderCopy(renderer,healthBarTexture,&ClipBox,&HealthBarBox);
+    for(Bullet* currentBossBullet : bossBulletList){
+        currentBossBullet->RenderEx();
+    }
+//    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+//    SDL_RenderDrawRect(renderer,&RenderBox);
+//    SDL_RenderDrawRect(renderer,&Hitbox);
 }
 
 void Boss::Update()
 {
     if(alive){
-        Hitbox.x += x_movespeed;
-        Hitbox.y += moveSpeed;
-        if(Hitbox.y >= BOSS_MIN_Y_POS) appear = 1;
-        if((Hitbox.y >= BOSS_MIN_Y_POS || Hitbox.y < 0) && appear){
+        RenderBox.x += x_movespeed;
+        RenderBox.y += moveSpeed;
+        if(RenderBox.y >= BOSS_MIN_Y_POS) appear = 1;
+        if((RenderBox.y >= BOSS_MIN_Y_POS || RenderBox.y < 0) && appear){
             moveSpeed = -moveSpeed;
         }
-        if(Hitbox.x < 0 || Hitbox.x + Hitbox.w >= SCREEN_WIDTH){
+        if(RenderBox.x < 0 || RenderBox.x + RenderBox.w >= SCREEN_WIDTH){
             x_movespeed = -x_movespeed;
         }
-        setRectSize(Hitbox, Hitbox.x, Hitbox.y, width, height);
+        setRectSize(RenderBox, RenderBox.x, RenderBox.y, width, height);
     }
     else{
-        Hitbox.y -= 1;
-        setRectSize(Hitbox, Hitbox.x, Hitbox.y, width, height);
+        RenderBox.y -= 1;
+        setRectSize(RenderBox, RenderBox.x, RenderBox.y, width, height);
     }
     //
     std::list<Bullet*>::iterator currentBossBullet = bossBulletList.begin();
@@ -64,6 +84,7 @@ void Boss::Update()
             ++currentBossBullet;
         }
     }
+    setRectSize(Hitbox, RenderBox.x + 40, RenderBox.y, RenderBox.w - 100, RenderBox.h - 50);
 }
 
 void Boss::DecreaseLives()

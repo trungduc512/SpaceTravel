@@ -11,6 +11,7 @@ public:
 	~Audio();
 
 	void playSound(std::string filePath, bool soundOn);
+	void playSound(std::string filePath, bool soundOn, int volume);
 };
 
 #endif // AUDIO_H_INCLUDED

@@ -75,7 +75,7 @@ void Game::NewGame()
 	starSpawnRate = STAR_SPAWN_RATE;
 	largeStarSpawnRate = LARGE_STAR_SPAWN_RATE;
 	backgroundSpawnRate = BACKGROUND_SPAWN_RATE;
-	livesLeft = 3;
+	Spaceship->livesLeft = 3;
 	score = 0;
 	isPause = 0;
 	lastShootTime = 0;
@@ -86,6 +86,8 @@ void Game::NewGame()
 	level = 1;
 	levelUpdate1 = 0;
 	levelUpdate2 = 0;
+	coinCounted = 0;
+	lastIncreaseSpeed = 0;
 	timer.start();
 	bossTimer.start();
 
@@ -144,6 +146,7 @@ void Game::Run()
         else{
             Mix_VolumeMusic(0);
         }
+        std::cout << obstacleMoveSpeed << std::endl;
         //stable fps
         frameTime = SDL_GetTicks() - frameStart;
         if (frameTime < DELAY_TIME)
@@ -200,7 +203,7 @@ void Game::Render()
             if(Spaceship->isCollided(&laserHitbox) && laserContact == 0){
                 audio->playSound("sound/LaserSoundHit.wav",soundOn);
                 laserContact = 1;
-                livesDecrease();
+                Spaceship->livesDecrease();
             }
         }
 
@@ -259,23 +262,14 @@ void Game::Render()
         (*currentObstacle)->Render();
         //check spaceship collision
         if(Spaceship->isCollided((*currentObstacle)->getHitBox())){
-            if((*currentObstacle)->getPath() == "image/amogus.png"){
-                livesLeft++;
-                if(livesLeft > 3){
-                    livesLeft = 3;
-                }
-                currentObstacle = obstaclesList.erase(currentObstacle);
-            }
-            else{
             //explode
-                for(int i = 0; i < 4; i++){
-                    explosion->Render(i,(*currentObstacle)->getHitBox());
-                }
-                // erase returns the iterator following the last removed element
-                currentObstacle = obstaclesList.erase(currentObstacle);
-                audio->playSound("sound/crash.wav",soundOn);
-                livesDecrease();
+            for(int i = 0; i < 4; i++){
+                explosion->Render(i,(*currentObstacle)->getHitBox());
             }
+            // erase returns the iterator following the last removed element
+            currentObstacle = obstaclesList.erase(currentObstacle);
+            audio->playSound("sound/crash.wav",soundOn);
+            Spaceship->livesDecrease();
         }
         else {
             ++currentObstacle;
@@ -290,9 +284,9 @@ void Game::Render()
         //check collision
         if(Spaceship->isCollided((*currentCoin)->getHitBox())){
             // erase returns the iterator following the last removed element
-            currentCoin = coinList.erase(currentCoin);
+            Spaceship->PowerUp((*currentCoin)->powerUpType);
             increaseScore(COIN_POINT);
-            Spaceship->increaseCoinEatToGetShield();
+            currentCoin = coinList.erase(currentCoin);
             audio->playSound("sound/CoinEaten.wav",soundOn);
         }
         else {
@@ -300,7 +294,7 @@ void Game::Render()
         }
     }
     if(NewBoss() || hasBoss){
-        boss->Render();
+        boss->Render(frame);//test
         if(!bulletList.empty()){
             std::list<Bullet*>::iterator currentBullet = bulletList.begin();
             while (currentBullet != bulletList.end()) {
@@ -323,10 +317,7 @@ void Game::Render()
             std::list<Bullet*>::iterator currentBullet = boss->bossBulletList.begin();
             while (currentBullet != boss->bossBulletList.end()) {
                 if(Spaceship->isCollided((*currentBullet)->getHitBox())){
-                    for(int i = 0; i < 4; i++){
-                        explosion->Render(i,(*currentBullet)->getHitBox());
-                    }
-                    livesDecrease();
+                    Spaceship->livesDecrease();
                     currentBullet = boss->bossBulletList.erase(currentBullet);
                 }
                 else{
@@ -337,7 +328,7 @@ void Game::Render()
     }
 
     energyBar->RenderEnergyBar(Spaceship->RemainCooldown(lastShootTime));
-    healthBar->RenderHealthBar(livesLeft);
+    healthBar->RenderHealthBar(Spaceship->livesLeft);
     text->DrawText("Score: ", SCORE_BOARD_X_POS, SCORE_BOARD_Y_POS, 30);
     text->DrawText(std::to_string(score), SCORE_BOARD_X_POS + 130, SCORE_BOARD_Y_POS, 30);
     text->DrawText("Best: ", SCORE_BOARD_X_POS, SCORE_BOARD_Y_POS + 35, 30);
@@ -399,7 +390,7 @@ bool Game::NewBoss()
 
 void Game::Update()
 {
-    if(livesLeft == 0){
+    if(Spaceship->livesLeft == 0){
         SDL_Delay(1000);
         Spaceship->died = true;
     }
@@ -413,7 +404,8 @@ void Game::Update()
     }
 
     if(frame % coinSpawnRate == 0){
-        coin = new Coin(renderer, "image/coin.png");
+        coinCounted++;
+        coin = new Coin(renderer, coinCounted);
 		coinList.push_back(coin);
     }
 
@@ -435,8 +427,10 @@ void Game::Update()
     UpdateList();
     if(NewBoss() || hasBoss){
         boss->Update();
-        if(frame % BOSS_SHOOT_RATE == 0 && boss->alive)
+        if(frame % BOSS_SHOOT_RATE == 0 && boss->alive){
             boss->LoadBullet(Spaceship->getMainHitBox());
+            audio->playSound("sound/bossShoot.wav",soundOn,40);
+        }
     }
 }
 
@@ -536,17 +530,6 @@ void Game::increaseScore(const int scoreGet)
     }
 }
 
-void Game::livesDecrease()
-{
-    if(Spaceship->shielded == false){
-        livesLeft--;
-    }
-    else {
-        Spaceship->shielded = false;
-        Spaceship->coinEatToGetShield = 0;
-    }
-}
-
 void Game::Quit()
 {
     freePointers();
@@ -602,7 +585,6 @@ void Game::updateLevel()
     }
 
     //increase speed of the game
-    static int lastIncreaseSpeed = 0;
     if(score / SCORE_TO_SPEED_UP > lastIncreaseSpeed) {
         obstacleMoveSpeed += 0.5 * (score/SCORE_TO_SPEED_UP);
         lastIncreaseSpeed++;

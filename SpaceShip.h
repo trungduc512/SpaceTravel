@@ -11,8 +11,11 @@ public:
     SpaceShip(SDL_Renderer* renderer, std::string path1, std::string path2);
     ~SpaceShip();
 
+    enum PowerUpType { HEAL, SHIELD };
+
     bool shielded;
     bool died;
+    unsigned int livesLeft;
 
     void Render(unsigned int frames);
     void moveLeft();
@@ -20,13 +23,13 @@ public:
 	void moveUp();
 	void moveDown();
 	void RenderShield();
+	void PowerUp(int powerup);
+	void livesDecrease();
 	int RemainCooldown(Uint32 &lastShootTime);
 	SDL_Rect* getLeftHitBox();
 	SDL_Rect* getRightHitBox();
 	SDL_Rect* getMainHitBox();
 	bool isCollided(const SDL_Rect* rect);
-	unsigned int coinEatToGetShield;
-	void increaseCoinEatToGetShield();
 
 private:
     SDL_Texture* shipTexture;

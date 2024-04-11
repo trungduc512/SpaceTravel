@@ -18,6 +18,7 @@ public:
     std::list<Bullet*> bossBulletList;
 
     void Render();
+    void Render(unsigned int frame);
     void Update();
     void Shoot();
     void LoadBullet(const SDL_Rect *mainHitbox);
@@ -27,6 +28,8 @@ public:
 
 private:
     SDL_Rect Hitbox;
+    SDL_Rect RenderBox;
+    SDL_Rect bossClipBox;
     SDL_Rect ClipBox;
     SDL_Rect HealthBarBox;
     SDL_Texture* texture;

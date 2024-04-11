@@ -17,7 +17,6 @@ SpaceShip::SpaceShip(SDL_Renderer* renderer, std::string path1, std::string path
 	height = 85;
 	shielded = 0;
 	died = 0;
-	coinEatToGetShield = 0;
 }
 
 SpaceShip::~SpaceShip()
@@ -107,13 +106,25 @@ bool SpaceShip::isCollided(const SDL_Rect *Hitbox)
     return false;
 }
 
-void SpaceShip::increaseCoinEatToGetShield()
+void SpaceShip::PowerUp(int powerup)
 {
-    coinEatToGetShield++;
-    if(coinEatToGetShield > 5) {
-        coinEatToGetShield = 5;
+    if(powerup == SHIELD){
+        shielded = true;
     }
-    if(coinEatToGetShield == 5){
-        shielded = 1;
+    if(powerup == HEAL){
+        livesLeft++;
+        if(livesLeft > 3){
+            livesLeft = 3;
+        }
+    }
+}
+
+void SpaceShip::livesDecrease()
+{
+    if(shielded == false){
+        livesLeft--;
+    }
+    else {
+        shielded = false;
     }
 }
