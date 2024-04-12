@@ -1,8 +1,8 @@
 #include "Boss.h"
 
-Boss::Boss(SDL_Renderer *renderer,unsigned int level) : MovingObject(renderer)
+Boss::Boss(SDL_Renderer *renderer, unsigned int level, SDL_Texture* pre_creatingTexture) : MovingObject(renderer)
 {
-    getTexture(texture, renderer, "image/monster_sprite_sheet.png", 69, 69, 69);//width, height
+    texture = pre_creatingTexture;
     width = 400;
     height = 400;
     getTexture(healthBarTexture, renderer, "image/Boss_health_bar.png", 69, 69, 69);
@@ -87,9 +87,9 @@ void Boss::Update()
     setRectSize(Hitbox, RenderBox.x + 40, RenderBox.y, RenderBox.w - 100, RenderBox.h - 50);
 }
 
-void Boss::DecreaseLives()
+void Boss::DecreaseLives(int damage)
 {
-    livesLeft--;
+    livesLeft -= damage;
     if(livesLeft <= 0){
         alive = 0;
     }

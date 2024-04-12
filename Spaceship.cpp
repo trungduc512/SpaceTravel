@@ -17,6 +17,7 @@ SpaceShip::SpaceShip(SDL_Renderer* renderer, std::string path1, std::string path
 	height = 85;
 	shielded = 0;
 	died = 0;
+	reduceCooldown = 0;
 }
 
 SpaceShip::~SpaceShip()
@@ -70,7 +71,7 @@ void SpaceShip::moveRight()
     x += SPACESHIP_MOVE_SPEED;
 }
 
-int SpaceShip::RemainCooldown(Uint32 &lastShootTime)
+int SpaceShip::RemainCooldown()
 {
     if(lastShootTime == 0){
         return SHOOT_COOLDOWN;
@@ -79,6 +80,19 @@ int SpaceShip::RemainCooldown(Uint32 &lastShootTime)
     int remainCooldown = currentTime - lastShootTime;
     if(remainCooldown >= SHOOT_COOLDOWN){
         return SHOOT_COOLDOWN;
+    }
+    return remainCooldown;
+}
+
+int SpaceShip::RemainCooldownSpecial()
+{
+    if(lastSpecialShoot == 0){
+        return SPECIAL_COOLDOWN;
+    }
+    Uint32 currentTime = SDL_GetTicks();
+    int remainCooldown = currentTime - lastSpecialShoot + reduceCooldown;
+    if(remainCooldown >= SPECIAL_COOLDOWN){
+        return SPECIAL_COOLDOWN;
     }
     return remainCooldown;
 }
@@ -116,6 +130,9 @@ void SpaceShip::PowerUp(int powerup)
         if(livesLeft > 3){
             livesLeft = 3;
         }
+    }
+    if(powerup == REDUCE_COOLDOWN){
+        reduceCooldown = SPECIAL_COOLDOWN / 4;
     }
 }
 

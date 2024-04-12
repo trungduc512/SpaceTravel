@@ -10,7 +10,7 @@ public:
     Coin(SDL_Renderer *renderer, unsigned int Count);
     ~Coin();
 
-    enum PowerUpType { HEAL, SHIELD };
+    enum PowerUpType { HEAL, SHIELD, REDUCE_COOLDOWN };
     void Render(unsigned int frame);
     void Update();
     void GetRandomPowerUp();

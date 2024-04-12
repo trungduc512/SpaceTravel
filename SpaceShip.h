@@ -11,11 +11,14 @@ public:
     SpaceShip(SDL_Renderer* renderer, std::string path1, std::string path2);
     ~SpaceShip();
 
-    enum PowerUpType { HEAL, SHIELD };
+    enum PowerUpType { HEAL, SHIELD, REDUCE_COOLDOWN };
 
     bool shielded;
     bool died;
     unsigned int livesLeft;
+    Uint32 lastShootTime;
+    Uint32 lastSpecialShoot;
+    int reduceCooldown;
 
     void Render(unsigned int frames);
     void moveLeft();
@@ -25,7 +28,8 @@ public:
 	void RenderShield();
 	void PowerUp(int powerup);
 	void livesDecrease();
-	int RemainCooldown(Uint32 &lastShootTime);
+	int RemainCooldown();
+	int RemainCooldownSpecial();
 	SDL_Rect* getLeftHitBox();
 	SDL_Rect* getRightHitBox();
 	SDL_Rect* getMainHitBox();

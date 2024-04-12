@@ -7,6 +7,19 @@ Bullet::Bullet(SDL_Renderer* renderer, const SDL_Rect *mainHitBox) : MovingObjec
     x = mainHitBox->x + (mainHitBox->w - width)/2;
     y = mainHitBox->y - height / 1.5;
     setRectSize(Box, x, y, width, height);
+    isSpecialBullet = 0;
+}
+
+Bullet::Bullet(SDL_Renderer* renderer, const SDL_Rect *mainHitBox, SDL_Texture* pre_creatingTexture) : MovingObject(renderer)
+{
+    texture = pre_creatingTexture;
+    moveSpeed = 10;
+    width = 80;
+    height = 120;
+    x = mainHitBox->x + (mainHitBox->w - width)/2;
+    y = mainHitBox->y - height / 1.5;
+    setRectSize(Box, x, y, width, height);
+    isSpecialBullet = 1;
 }
 
 Bullet::Bullet(SDL_Renderer* renderer, const SDL_Rect *bossHitbox, double angle) : MovingObject(renderer)
@@ -18,6 +31,7 @@ Bullet::Bullet(SDL_Renderer* renderer, const SDL_Rect *bossHitbox, double angle)
     this->angle = angle;
     vX = sin(this->angle);
     vY = cos(this->angle);
+    isSpecialBullet = 0;
 }
 
 Bullet::~Bullet()
@@ -38,20 +52,34 @@ void Bullet::UpdateEx()
 
 void Bullet::Render()
 {
+    setRectSize(Renderbox, Box.x, Box.y, Box.w, Box.h);
     setRectSize(Hitbox, Box.x, Box.y, Box.w, Box.h);
     SDL_RenderCopy(renderer, texture, NULL, &Box);
-    //Render Hitbox
+    //Render Renderbox
+    //SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    //SDL_RenderDrawRect(renderer, &Renderbox);
+}
+
+void Bullet::Render(unsigned int frame)
+{
+    setRectSize(Clipbox, (frame % 23) * 244, 0, 244, 365);
+    setRectSize(Hitbox, Box.x + Box.w/4, Box.y, Box.w/2, Box.h);
+    setRectSize(Renderbox, Box.x, Box.y, Box.w, Box.h);
+    SDL_RenderCopy(renderer, texture, &Clipbox, &Box);
+    //Render Renderbox
     //SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     //SDL_RenderDrawRect(renderer, &Hitbox);
+    //SDL_RenderDrawRect(renderer, &Renderbox);
 }
 
 void Bullet::RenderEx()
 {
+    setRectSize(Renderbox, Box.x, Box.y, Box.w, Box.h);
     setRectSize(Hitbox, Box.x, Box.y, Box.w, Box.h);
-    SDL_RenderCopyEx(renderer, texture, NULL, &Box, 180 - angle * 180 / 3.141592, NULL, SDL_FLIP_NONE);
-    //Render Hitbox
+    SDL_RenderCopyEx(renderer, texture, NULL, &Box, 180 - angle * 180 / M_PI, NULL, SDL_FLIP_NONE);
+    //Render Renderbox
     //SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    //SDL_RenderDrawRect(renderer, &Hitbox);
+    //SDL_RenderDrawRect(renderer, &Renderbox);
     //std::cout << angle << std::endl;
     //std::cout << vX << std::endl;
     //std::cout << vY << std::endl;

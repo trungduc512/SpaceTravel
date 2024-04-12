@@ -88,6 +88,7 @@ private:
     unsigned int coinCounted;
     float obstacleMoveSpeed;
     Uint32 lastShootTime;
+    Uint32 lastSpecialShoot;
     Uint32 frameStart;
 	Uint32 frameTime;
 	Sint32 bestScore;
@@ -99,6 +100,7 @@ private:
 	SDL_Texture* warningTexture;
 	SDL_Texture* laserTexture;
 	SDL_Texture* bossTexture;
+	SDL_Texture* specialBulletTexture;
 	bool isPause;
 	bool laserOn;
 	bool laserContact;

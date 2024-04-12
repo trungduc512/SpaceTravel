@@ -12,11 +12,11 @@ HUD::~HUD()
 
 void HUD::RenderEnergyBar(int cooldownTime)
 {
-    if(cooldownTime == SHOOT_COOLDOWN){
+    if(cooldownTime == SPECIAL_COOLDOWN){
         cooldownTime = 4;
     }
     else{
-        cooldownTime =(cooldownTime / (SHOOT_COOLDOWN/5))%5;
+        cooldownTime =(cooldownTime / (SPECIAL_COOLDOWN/4))%4;
     }
     setRectSize(renderBox, 1698, 50, 100, 50);
     setRectSize(renderClip, 0, cooldownTime * 200, 380, 200);

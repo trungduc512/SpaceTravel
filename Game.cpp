@@ -43,6 +43,8 @@ bool Game::Init()
     quit = false;
     soundOn = true;
     pauseMenu = new PauseMenu(renderer);
+    getTexture(specialBulletTexture, renderer, "image/enhance_canon.png", 61, 61, 61);
+    getTexture(bossTexture, renderer, "image/monster_sprite_sheet.png", 69, 69, 69);
     return true;
 }
 
@@ -78,7 +80,8 @@ void Game::NewGame()
 	Spaceship->livesLeft = 3;
 	score = 0;
 	isPause = 0;
-	lastShootTime = 0;
+	Spaceship->lastShootTime = 0;
+	Spaceship->lastSpecialShoot = 0;
 	pos = 0;
 	laserOn = 0;
 	laserContact = 0;
@@ -146,7 +149,7 @@ void Game::Run()
         else{
             Mix_VolumeMusic(0);
         }
-        std::cout << obstacleMoveSpeed << std::endl;
+        //std::cout << obstacleMoveSpeed << std::endl;
         //stable fps
         frameTime = SDL_GetTicks() - frameStart;
         if (frameTime < DELAY_TIME)
@@ -219,7 +222,10 @@ void Game::Render()
         std::list<Bullet*>::iterator currentBullet = bulletList.begin();
         while (currentBullet != bulletList.end()) {
             // Render bullet
-            (*currentBullet)->Render();
+            if((*currentBullet)->isSpecialBullet)
+                (*currentBullet)->Render(frame);
+            else
+                (*currentBullet)->Render();
             ++currentBullet;
         }
     }
@@ -235,12 +241,13 @@ void Game::Render()
             while(currentObstacle != obstaclesList.end()){
                 if(SDL_HasIntersection((*currentBullet)->getHitBox(),(*currentObstacle)->getHitBox())){
                     //explode
+                    if(!(*currentBullet)->isSpecialBullet){
+                        currentBullet = bulletList.erase(currentBullet);
+                    }
                     for(int i = 0; i < 4; i++){
                         explosion->Render(i,(*currentObstacle)->getHitBox());
                     }
-                    //currentBullet = bulletList.erase(currentBullet);
                     currentObstacle = obstaclesList.erase(currentObstacle);
-                    currentBullet = bulletList.erase(currentBullet);
                     checkBulletCollision = 1;
                     increaseScore(OBSTACLE_BREAK_POINT);
                     audio->playSound("sound/AsteroidHit.wav",soundOn);
@@ -285,9 +292,12 @@ void Game::Render()
         if(Spaceship->isCollided((*currentCoin)->getHitBox())){
             // erase returns the iterator following the last removed element
             Spaceship->PowerUp((*currentCoin)->powerUpType);
+            if((*currentCoin)->powerUpType == -1)
+                audio->playSound("sound/CoinEaten.wav",soundOn);
+            else
+                audio->playSound("sound/get_power_up.wav",soundOn);
             increaseScore(COIN_POINT);
             currentCoin = coinList.erase(currentCoin);
-            audio->playSound("sound/CoinEaten.wav",soundOn);
         }
         else {
             ++currentCoin;
@@ -299,7 +309,10 @@ void Game::Render()
             std::list<Bullet*>::iterator currentBullet = bulletList.begin();
             while (currentBullet != bulletList.end()) {
                 if(SDL_HasIntersection(boss->getHitBox(),(*currentBullet)->getHitBox())){
-                    boss->DecreaseLives();
+                    if(!(*currentBullet)->isSpecialBullet)
+                        boss->DecreaseLives(BULLET_DAMAGE);
+                    else
+                        boss->DecreaseLives(SPECIAL_BULLET_DAMAGE);
                     currentBullet = bulletList.erase(currentBullet);
                     continue;
                 }
@@ -327,7 +340,7 @@ void Game::Render()
         }
     }
 
-    energyBar->RenderEnergyBar(Spaceship->RemainCooldown(lastShootTime));
+    energyBar->RenderEnergyBar(Spaceship->RemainCooldownSpecial()); // last special shoot
     healthBar->RenderHealthBar(Spaceship->livesLeft);
     text->DrawText("Score: ", SCORE_BOARD_X_POS, SCORE_BOARD_Y_POS, 30);
     text->DrawText(std::to_string(score), SCORE_BOARD_X_POS + 130, SCORE_BOARD_Y_POS, 30);
@@ -375,9 +388,9 @@ bool Game::NewLaser()
 bool Game::NewBoss()
 {
     if(bossTimer.getSeconds() == BOSS_SPAWN_TIME){
-        if(boss != NULL)
-            delete boss;
-        boss = new Boss(renderer,level);
+//        if(boss != NULL)
+//            delete boss;
+        boss = new Boss(renderer,level,bossTexture);
         bossTimer.stop();
         hasBoss = 1;
         return 1;
@@ -455,10 +468,19 @@ void Game::HandleInput()
 	}
 	if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE)
     {
-        if( Spaceship->RemainCooldown(lastShootTime) == SHOOT_COOLDOWN ){
+        if( Spaceship->RemainCooldown() == SHOOT_COOLDOWN ){
             bullet = new Bullet(renderer, Spaceship->getMainHitBox());
             bulletList.push_back(bullet);
-            lastShootTime = SDL_GetTicks();
+            Spaceship->lastShootTime = SDL_GetTicks();
+        }
+    }
+    if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_r)
+    {
+        if( Spaceship->RemainCooldownSpecial() == SPECIAL_COOLDOWN ){
+            bullet = new Bullet(renderer, Spaceship->getMainHitBox(),specialBulletTexture);
+            bulletList.push_back(bullet);
+            Spaceship->lastSpecialShoot = SDL_GetTicks();
+            Spaceship->reduceCooldown = 0;
         }
     }
 }
@@ -533,6 +555,8 @@ void Game::increaseScore(const int scoreGet)
 void Game::Quit()
 {
     freePointers();
+    SDL_DestroyTexture(bossTexture);
+    SDL_DestroyTexture(specialBulletTexture);
     //save best score
     file = SDL_RWFromFile( "bestscore.bin", "w+b" );
     SDL_RWwrite( file, &bestScore, sizeof(Sint32), 1 );

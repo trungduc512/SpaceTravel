@@ -13,7 +13,8 @@ const int SPACESHIP_MOVE_SPEED = 15;
 const int COIN_POINT = 100;
 const int OBSTACLE_BREAK_POINT = 50;
 const int BOSS_DEFEAT_POINT = 1000;
-const int SHOOT_COOLDOWN = 100;
+const int SHOOT_COOLDOWN = 100; //(ms)
+const int SPECIAL_COOLDOWN = 4000; //(ms) // 4000
 const int TIME_TO_NEXT_LEVEL = 10;
 const int SCORE_TO_SPEED_UP = 1500;
 const int MAX_OBSTACLE_SPEED = 15;
@@ -37,6 +38,8 @@ const unsigned int BACKGROUND_SPAWN_RATE = 150;
 const unsigned int POWERUPS_SPAWN_RATE = 5;
 const unsigned int BOSS_BASE_HEALTH = 20;
 const unsigned int BOSS_SCALE_HEALTH = 8;
+const unsigned int BULLET_DAMAGE = 1;
+const unsigned int SPECIAL_BULLET_DAMAGE = 10;
 const float BOSS_MIN_Y_POS = 200;
 
 #endif // GAMECONSTANTS_H_INCLUDED

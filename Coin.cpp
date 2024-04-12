@@ -41,6 +41,10 @@ void Coin::Render( unsigned int frame )
         setRectSize(clipBox,226 + 800*((frame/10)%4), 0, 350, 350);
         SDL_RenderCopy(renderer, texture, &clipBox, &Box);
     }
+    else if(powerUpType == REDUCE_COOLDOWN){
+        setRectSize(clipBox,58*((frame/4)%10), 0, 58, 79);
+        SDL_RenderCopy(renderer, texture, &clipBox, &Box);
+    }
     else{
         SDL_RenderCopy(renderer, texture, NULL, &Box);
     }
@@ -57,11 +61,14 @@ SDL_Rect* Coin::getHitBox()
 
 void Coin::GetRandomPowerUp()
 {
-    powerUpType = rand()% 2;
+    powerUpType = rand()%3;
     if(powerUpType == HEAL){
         path = "image/heart_sprite.png";
     }
     else if(powerUpType == SHIELD){
         path = "image/shield_powerup.png";
+    }
+    else if(powerUpType == REDUCE_COOLDOWN){
+        path = "image/battery_sprite_sheet.png";
     }
 }

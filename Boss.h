@@ -9,11 +9,11 @@
 class Boss : public MovingObject
 {
 public:
-    Boss(SDL_Renderer *renderer, unsigned int level);
+    Boss(SDL_Renderer *renderer, unsigned int level, SDL_Texture* pre_creatingTexture);
     ~Boss();
 
-    unsigned int livesLeft;
-    unsigned int firstLivesLeft;
+    int livesLeft;
+    int firstLivesLeft;
     bool alive;
     std::list<Bullet*> bossBulletList;
 
@@ -23,7 +23,7 @@ public:
     void Shoot();
     void LoadBullet(const SDL_Rect *mainHitbox);
     double getAngle(const SDL_Rect *mainHitbox);
-    void DecreaseLives();
+    void DecreaseLives(int damage);
     SDL_Rect* getHitBox();
 
 private:
