@@ -21,20 +21,6 @@ Boss::~Boss()
     SDL_DestroyTexture(healthBarTexture);
 }
 
-void Boss::Render()
-{
-    setRectSize(ClipBox, 0, 0, livesLeft * (700 / firstLivesLeft), 188 ); // width 700, height 188
-    setRectSize(HealthBarBox,RenderBox.x + 50, RenderBox.y + 175, livesLeft * (150 / firstLivesLeft), 10); // suit
-    SDL_RenderCopy(renderer,texture,NULL,&Hitbox);
-    if(alive)
-        SDL_RenderCopy(renderer,healthBarTexture,&ClipBox,&HealthBarBox);
-    for(Bullet* currentBossBullet : bossBulletList){
-        currentBossBullet->RenderEx();
-    }
-//    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-//    SDL_RenderDrawRect(renderer,&RenderBox);
-}
-
 void Boss::Render(unsigned int frame)
 {
     setRectSize(bossClipBox, 0, ((frame / 5)%34) * 400, 400, 400);
@@ -44,7 +30,7 @@ void Boss::Render(unsigned int frame)
     if(alive)
         SDL_RenderCopy(renderer,healthBarTexture,&ClipBox,&HealthBarBox);
     for(Bullet* currentBossBullet : bossBulletList){
-        currentBossBullet->RenderEx();
+        currentBossBullet->RenderEx(frame);
     }
 //    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 //    SDL_RenderDrawRect(renderer,&RenderBox);

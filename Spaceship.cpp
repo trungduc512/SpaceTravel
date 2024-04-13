@@ -4,7 +4,7 @@ SpaceShip::SpaceShip(SDL_Renderer* renderer, std::string path1, std::string path
 {
     getTexture(shipTexture, renderer, path1, 69, 69, 69, width, height);
     getTexture(flameTexture, renderer, path2, 69, 69, 69);
-    getTexture(shieldTexture, renderer, "image/shield.png", 69, 69, 69);
+    getTexture(shieldTexture, renderer, "image/shield_sprite.png", 0, 0, 0);
     renderBox.w = width;
     renderBox.h = height;
 
@@ -45,10 +45,11 @@ void SpaceShip::Render(unsigned int frame)
     //SDL_RenderDrawRect(renderer, &rightHitbox);
 }
 
-void SpaceShip::RenderShield()
+void SpaceShip::RenderShield(unsigned int frame)
 {
+    setRectSize(shieldClipBox, frame % 50 * 200, 0, 200, 200);
     setRectSize(renderBox2, x - width*0.125, y - height*0.125, width * 1.25, height * 1.25);
-    SDL_RenderCopy(renderer, shieldTexture, NULL, &renderBox2);
+    SDL_RenderCopy(renderer, shieldTexture, &shieldClipBox, &renderBox2);
 }
 
 void SpaceShip::moveUp()

@@ -21,11 +21,11 @@ public:
     int reduceCooldown;
 
     void Render(unsigned int frames);
+    void RenderShield(unsigned int frames);
     void moveLeft();
-	void moveRight();
+    void moveRight();
 	void moveUp();
 	void moveDown();
-	void RenderShield();
 	void PowerUp(int powerup);
 	void livesDecrease();
 	int RemainCooldown();
@@ -43,6 +43,7 @@ private:
     SDL_Rect renderBox2;
     SDL_Rect flame;
     SDL_Rect clipBox;
+    SDL_Rect shieldClipBox;
     SDL_Rect mainHitbox;
 	SDL_Rect leftHitbox;
 	SDL_Rect rightHitbox;

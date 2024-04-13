@@ -24,7 +24,9 @@ Bullet::Bullet(SDL_Renderer* renderer, const SDL_Rect *mainHitBox, SDL_Texture* 
 
 Bullet::Bullet(SDL_Renderer* renderer, const SDL_Rect *bossHitbox, double angle) : MovingObject(renderer)
 {
-    getTexture(texture, renderer, "image/Boss_bullet.png", 69, 69, 69, width, height);
+    getTexture(texture, renderer, "image/boss_bullet_sprite.png", 69, 69, 69);
+    width = 48;
+    height = 92;
     x = bossHitbox->x +  bossHitbox->w / 2 - width/2;
     y = bossHitbox->y + bossHitbox->h / 2;
     setRectSize(Box, x, y, width, height);
@@ -72,14 +74,15 @@ void Bullet::Render(unsigned int frame)
     //SDL_RenderDrawRect(renderer, &Renderbox);
 }
 
-void Bullet::RenderEx()
+void Bullet::RenderEx(unsigned int frame)
 {
+    setRectSize(Clipbox, ((frame/10) % 5) * 197, 0, 197, 378);
     setRectSize(Renderbox, Box.x, Box.y, Box.w, Box.h);
     setRectSize(Hitbox, Box.x, Box.y, Box.w, Box.h);
-    SDL_RenderCopyEx(renderer, texture, NULL, &Box, 180 - angle * 180 / M_PI, NULL, SDL_FLIP_NONE);
+    SDL_RenderCopyEx(renderer, texture, &Clipbox, &Box, 180 - angle * 180 / M_PI, NULL, SDL_FLIP_NONE);
     //Render Renderbox
     //SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    //SDL_RenderDrawRect(renderer, &Renderbox);
+    //SDL_RenderDrawRect(renderer, &Hitbox);
     //std::cout << angle << std::endl;
     //std::cout << vX << std::endl;
     //std::cout << vY << std::endl;

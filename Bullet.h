@@ -14,7 +14,7 @@ public:
 
     void Render();
     void Render(unsigned int frame);
-    void RenderEx();
+    void RenderEx(unsigned int frame);
     void Update();
     void UpdateEx();
     SDL_Rect* getHitBox();

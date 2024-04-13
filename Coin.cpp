@@ -46,7 +46,8 @@ void Coin::Render( unsigned int frame )
         SDL_RenderCopy(renderer, texture, &clipBox, &Box);
     }
     else{
-        SDL_RenderCopy(renderer, texture, NULL, &Box);
+        setRectSize(clipBox,(frame%22)*126, 0, 126, 126);
+        SDL_RenderCopy(renderer, texture, &clipBox, &Box);
     }
     setRectSize(Hitbox, Box.x, Box.y, Box.w, Box.h);
 	//Render Collision Box
@@ -62,11 +63,12 @@ SDL_Rect* Coin::getHitBox()
 void Coin::GetRandomPowerUp()
 {
     powerUpType = rand()%3;
+//    powerUpType = 1;
     if(powerUpType == HEAL){
         path = "image/heart_sprite.png";
     }
     else if(powerUpType == SHIELD){
-        path = "image/shield_powerup.png";
+        path = "image/shield_powerup_sprite.png";
     }
     else if(powerUpType == REDUCE_COOLDOWN){
         path = "image/battery_sprite_sheet.png";
