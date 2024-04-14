@@ -27,8 +27,8 @@ void HUD::RenderHealthBar(unsigned int livesLeft)
 {
     if (livesLeft != 0) {
         // Calculate the dimensions for the health bar
-        int barWidth = livesLeft * 30;
-        int clipWidth = livesLeft * 160;
+        int barWidth = livesLeft * 15;
+        int clipWidth = livesLeft * 80;
 
         // Set the position and size of the health bar
         setRectSize(renderBox, 1700, 25, barWidth, 30);

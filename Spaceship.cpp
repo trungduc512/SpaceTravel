@@ -128,8 +128,8 @@ void SpaceShip::PowerUp(int powerup)
     }
     if(powerup == HEAL){
         livesLeft++;
-        if(livesLeft > 3){
-            livesLeft = 3;
+        if(livesLeft > SPACESHIP_HEALTH){
+            livesLeft = SPACESHIP_HEALTH;
         }
     }
     if(powerup == REDUCE_COOLDOWN){

@@ -40,6 +40,7 @@ const unsigned int BOSS_BASE_HEALTH = 20;
 const unsigned int BOSS_SCALE_HEALTH = 8;
 const unsigned int BULLET_DAMAGE = 1;
 const unsigned int SPECIAL_BULLET_DAMAGE = 10;
+const unsigned int SPACESHIP_HEALTH = 6;
 const float BOSS_MIN_Y_POS = 200;
 
 #endif // GAMECONSTANTS_H_INCLUDED

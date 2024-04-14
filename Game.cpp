@@ -235,7 +235,7 @@ void Game::InitNewGameStats()
 	starSpawnRate = STAR_SPAWN_RATE;
 	largeStarSpawnRate = LARGE_STAR_SPAWN_RATE;
 	backgroundSpawnRate = BACKGROUND_SPAWN_RATE;
-	Spaceship->livesLeft = 3;
+	Spaceship->livesLeft = SPACESHIP_HEALTH;
 	score = 0;
 	isPause = 0;
 	Spaceship->lastShootTime = 0;
