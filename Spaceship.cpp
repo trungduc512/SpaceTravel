@@ -133,7 +133,7 @@ void SpaceShip::PowerUp(int powerup)
         }
     }
     if(powerup == REDUCE_COOLDOWN){
-        reduceCooldown = SPECIAL_COOLDOWN / 4;
+        reduceCooldown = SPECIAL_COOLDOWN;
     }
 }
 
