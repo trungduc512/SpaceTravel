@@ -8,7 +8,7 @@ Game::Game()
 bool Game::Init()
 {
     srand(time(NULL));
-    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
+    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMECONTROLLER);
     TTF_Init();
     Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
     window = SDL_CreateWindow( "SpaceTravel", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, ACTUAL_WINDOW_WIDTH, ACTUAL_WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI);
@@ -17,6 +17,7 @@ bool Game::Init()
     if( renderer == NULL ) return false;
     SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
     InitBestScore();
+    gameController = SDL_GameControllerOpen(0);
     CreateMenus();
     CreateComplicateTexture();
     soundOn = true;
@@ -105,6 +106,7 @@ void Game::Quit()
     //quit systems
     SDL_DestroyWindow( window );
     SDL_DestroyRenderer( renderer );
+    SDL_GameControllerClose(gameController);
     SDL_Quit();
     IMG_Quit();
     Mix_Quit();
@@ -123,6 +125,7 @@ void Game::InitNullValues()
     music = NULL;
     audio = NULL;
     boss = NULL;
+    gameController = NULL;
 }
 
 void Game::InitBestScore()
@@ -599,23 +602,28 @@ void Game::UpdateBoss()
 void Game::HandleInput()
 {
 	const Uint8* currentKeyState = SDL_GetKeyboardState(NULL);
-	if (currentKeyState[SDL_SCANCODE_A] || currentKeyState[SDL_SCANCODE_LEFT])
+	if (currentKeyState[SDL_SCANCODE_A] || currentKeyState[SDL_SCANCODE_LEFT] ||
+    SDL_GameControllerGetButton(gameController, SDL_CONTROLLER_BUTTON_DPAD_LEFT) == 1)
 	{
 		Spaceship->moveLeft();
 	}
-	if (currentKeyState[SDL_SCANCODE_D] || currentKeyState[SDL_SCANCODE_RIGHT])
+	if (currentKeyState[SDL_SCANCODE_D] || currentKeyState[SDL_SCANCODE_RIGHT] ||
+    SDL_GameControllerGetButton(gameController, SDL_CONTROLLER_BUTTON_DPAD_RIGHT) == 1)
 	{
 		Spaceship->moveRight();
 	}
-	if (currentKeyState[SDL_SCANCODE_W] || currentKeyState[SDL_SCANCODE_UP])
+	if (currentKeyState[SDL_SCANCODE_W] || currentKeyState[SDL_SCANCODE_UP] ||
+    SDL_GameControllerGetButton(gameController, SDL_CONTROLLER_BUTTON_DPAD_UP) == 1)
 	{
 		Spaceship->moveUp();
 	}
-	if (currentKeyState[SDL_SCANCODE_S] || currentKeyState[SDL_SCANCODE_DOWN])
+	if (currentKeyState[SDL_SCANCODE_S] || currentKeyState[SDL_SCANCODE_DOWN] ||
+    SDL_GameControllerGetButton(gameController, SDL_CONTROLLER_BUTTON_DPAD_DOWN) == 1)
 	{
 		Spaceship->moveDown();
 	}
-	if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE)
+	if ((event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE) ||
+    SDL_GameControllerGetButton(gameController, SDL_CONTROLLER_BUTTON_A) == 1)
     {
         if( Spaceship->RemainCooldown() == SHOOT_COOLDOWN ){
             bullet = new Bullet(renderer, Spaceship->getMainHitBox());
@@ -623,7 +631,8 @@ void Game::HandleInput()
             Spaceship->lastShootTime = SDL_GetTicks();
         }
     }
-    if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_r)
+    if ((event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_r) ||
+    SDL_GameControllerGetButton(gameController, SDL_CONTROLLER_BUTTON_X) == 1)
     {
         if( Spaceship->RemainCooldownSpecial() == SPECIAL_COOLDOWN ){
             bullet = new Bullet(renderer, Spaceship->getMainHitBox(),specialBulletTexture);

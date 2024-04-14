@@ -82,6 +82,7 @@ private:
     SDL_Window* window;
     SDL_Event event;
     Mix_Music* music;
+    SDL_GameController* gameController;
     SpaceShip* Spaceship;
     Menu* quitMenu;
     MainMenu* mainMenu;
