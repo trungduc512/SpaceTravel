@@ -3,19 +3,23 @@
 
 #include "MovingObject.h"
 #include <iostream>
+#include <cmath>
 
 class Coin : public MovingObject
 {
 public:
     Coin(SDL_Renderer *renderer, unsigned int Count);
+    Coin(SDL_Renderer *renderer, int type, float x_pos, float y_pos);
     ~Coin();
 
     enum PowerUpType { HEAL, SHIELD, REDUCE_COOLDOWN };
     void Render(unsigned int frame);
-    void Update();
+    void Update( const SDL_Rect* mainHitBox);
     void GetRandomPowerUp();
     SDL_Rect* getHitBox();
     int powerUpType;
+    int getType();
+    void setType( int type );
 
 private:
     SDL_Rect Hitbox;

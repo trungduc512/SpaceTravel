@@ -7,11 +7,16 @@ class Background : public MovingObject
 {
 public:
     Background(SDL_Renderer* renderer);
+    Background(SDL_Renderer* renderer, int type, float x_pos, float y_pos);
     ~Background();
 
     void getRandomBackGround();
     void Render();
     void Update();
+    void LoadType(int type);
+    void SetPos( float x_pos, float y_pos);
+    int getType();
+    int pathnum;
 
 private:
     SDL_Texture* texture;

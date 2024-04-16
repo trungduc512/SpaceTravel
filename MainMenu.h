@@ -7,7 +7,7 @@
 class MainMenu : public Object
 {
 private:
-	enum ButtonNames { PLAY, QUIT, RESET_HIGHSCORE, SOUNDON, SOUNDOFF};
+	enum ButtonNames { NEW_GAME, LOAD_GAME, QUIT, RESET_HIGHSCORE, SOUND_ON, SOUND_OFF};
 	SDL_Texture* texture;
 	SDL_Rect renderRect;
 	Text* text;
@@ -15,12 +15,13 @@ private:
 public:
 	MainMenu(SDL_Renderer* renderer);
 	~MainMenu();
-    Button* button[5];
+    Button* button[6];
     bool quitGame;
     bool play;
     bool resetHighscore;
     bool soundChange;
     bool soundOn;
+    bool loadGame;
 
 	void RenderMenu( Sint32 &bestScore);
 	void HandleMenuEvent(SDL_Event &event);

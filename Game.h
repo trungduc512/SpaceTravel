@@ -21,11 +21,19 @@
 #include <iostream>
 #include <list>
 #include <string>
+#include <fstream>
+#include <sstream>
 
 class Game
 {
 public:
     Game();
+
+//    enum SPACESHIP_STATS { POSITION, LIVESLEFT, SHIELDED }; //3
+//    enum OBSTACLE_TYPE { ASTEROID1, ASTEROID2, ASTEROID3, SATELLITE, UFO, AMOGUS }; //6
+//    enum COIN_TYPE { NORMAL_COIN, HEART, BATTERY, SHIELD }; //4
+//    enum BACKGROUND_TYPE { EARTH, GALAXY1, GALAXY2, GALAXY3, PLANET1, PLANET2, MARS, BLACKHOLE }; //8
+
     bool Init();
     void InitNullValues();
     void Render();
@@ -47,6 +55,9 @@ public:
     void InitBestScore();
     void CreateComplicateTexture();
     void NewGame();
+    void PlayLoadGame();
+    void SaveGame();
+    void LoadGame();
     void ClearGameObjects();
     void ClearLists();
     void NewGameObjects();
@@ -129,6 +140,7 @@ private:
 	SDL_Texture* laserTexture;
 	SDL_Texture* bossTexture;
 	SDL_Texture* specialBulletTexture;
+	SDL_Rect laserHitbox;
 	bool isPause;
 	bool laserOn;
 	bool laserContact;
@@ -137,7 +149,7 @@ private:
 	bool soundOn;
 	bool levelUpdate1;
 	bool levelUpdate2;
-	SDL_Rect laserHitbox;
+	bool newgame;
 	int pos;
 	int lastIncreaseSpeed;
 };

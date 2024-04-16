@@ -36,6 +36,30 @@ Bullet::Bullet(SDL_Renderer* renderer, const SDL_Rect *bossHitbox, double angle)
     isSpecialBullet = 0;
 }
 
+Bullet::Bullet(SDL_Renderer* renderer, double angle, float x_pos, float y_pos) : MovingObject(renderer)
+{
+    getTexture(texture, renderer, "image/boss_bullet_sprite.png", 69, 69, 69);
+    width = 48;
+    height = 92;
+    x = x_pos;
+    y = y_pos;
+    setRectSize(Box, x, y, width, height);
+    this->angle = angle;
+    vX = sin(this->angle);
+    vY = cos(this->angle);
+    isSpecialBullet = 0;
+}
+
+Bullet::Bullet(SDL_Renderer* renderer, float x_pos, float y_pos) : MovingObject(renderer)
+{
+    getTexture(texture, renderer, "image/bullet.png", 69, 69, 69, width, height);
+    moveSpeed = 20;
+    x = x_pos;
+    y = y_pos;
+    setRectSize(Box, x, y, width, height);
+    isSpecialBullet = 0;
+}
+
 Bullet::~Bullet()
 {
     SDL_DestroyTexture(texture);

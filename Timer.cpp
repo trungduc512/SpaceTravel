@@ -4,6 +4,7 @@ Timer::Timer()
 {
 	startTicks = 0;
 	pausedTicks = 0;
+	savedTicks = 0;
 
 	paused = false;
 	started = false;
@@ -25,6 +26,7 @@ void Timer::stop()
 
 	startTicks = 0;
 	pausedTicks = 0;
+	savedTicks = 0;
 }
 
 void Timer::pause()
@@ -47,6 +49,11 @@ void Timer::unpause()
 	}
 }
 
+void Timer::setSavedTicks( Uint32 save )
+{
+    savedTicks = save;
+}
+
 Uint32 Timer::getTicks()
 {
 	Uint32 time = 0;
@@ -55,15 +62,30 @@ Uint32 Timer::getTicks()
 	{
 		if (paused)
 		{
-			time = pausedTicks;
+			time = pausedTicks + savedTicks;
 		}
 		else
 		{
-			time = SDL_GetTicks() - startTicks;
+			time = SDL_GetTicks() - startTicks + savedTicks;
 		}
 	}
 
 	return time;
+}
+
+Uint32 Timer::getStartTicks()
+{
+    return startTicks;
+}
+
+Uint32 Timer::getPauseTicks()
+{
+    return pausedTicks;
+}
+
+Uint32 Timer::getSaveTicks()
+{
+    return savedTicks;
 }
 
 int Timer::getSeconds()

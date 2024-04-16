@@ -146,3 +146,9 @@ void SpaceShip::livesDecrease()
         shielded = false;
     }
 }
+
+void SpaceShip::SetPos(float x_pos, float y_pos)
+{
+    x = x_pos;
+    y = y_pos;
+}

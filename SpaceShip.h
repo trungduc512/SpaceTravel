@@ -28,6 +28,7 @@ public:
 	void moveDown();
 	void PowerUp(int powerup);
 	void livesDecrease();
+	void SetPos(float x_pos, float y_pos);
 	int RemainCooldown();
 	int RemainCooldownSpecial();
 	SDL_Rect* getLeftHitBox();

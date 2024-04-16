@@ -3,6 +3,7 @@
 
 #include <SDL.h>
 
+enum STATS_TYPE { GAMESTATS, TIME, SPACESHIP, BACKGROUND, OBSTACLE, COIN, STAR, LARGESTAR, BULLET, BOSS, BOSS_BULLET};
 const int ACTUAL_WINDOW_WIDTH = 1280;
 const int ACTUAL_WINDOW_HEIGHT = 720;
 const int SCREEN_WIDTH = 1920;
@@ -29,6 +30,8 @@ const int LASER_DURATION = 500;
 const int WARNING_TIME = 2000;
 const int SCORE_BOARD_X_POS = 10;
 const int SCORE_BOARD_Y_POS = 10;
+const int STAR_SIZE = 1;
+const int LARGE_STAR_SIZE = 5;
 const int FPS = 60;
 const int DELAY_TIME = 1000/FPS;
 const unsigned int COIN_SPAWN_RATE = 100;
@@ -42,5 +45,7 @@ const unsigned int BULLET_DAMAGE = 1;
 const unsigned int SPECIAL_BULLET_DAMAGE = 10;
 const unsigned int SPACESHIP_HEALTH = 6;
 const float BOSS_MIN_Y_POS = 200;
+const float STAR_MOVE_SPEED = 5;
+const float LARGE_STAR_MOVE_SPEED = 7;
 
 #endif // GAMECONSTANTS_H_INCLUDED

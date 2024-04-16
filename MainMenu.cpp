@@ -3,11 +3,12 @@
 MainMenu::MainMenu(SDL_Renderer* renderer) : Object(renderer)
 {
     int pos = SCREEN_WIDTH / 2 - 300 / 2;
-	button[PLAY] = new Button(renderer, "image/Play_button.png", pos, 400, 300, 50);
-	button[RESET_HIGHSCORE] = new Button(renderer, "image/Reset_highscore_button.png", pos, 550, 300, 50);
-	button[QUIT] = new Button(renderer, "image/Quit_button.png", pos, 625, 300, 50);
-	button[SOUNDON] = new Button(renderer, "image/SoundOn_button.png", pos, 475, 300, 50);
-	button[SOUNDOFF] = new Button(renderer, "image/SoundOff_button.png", pos, 475, 300, 50);
+	button[NEW_GAME] = new Button(renderer, "image/New_game_button.png", pos, 400, 300, 50);
+	button[RESET_HIGHSCORE] = new Button(renderer, "image/Reset_highscore_button.png", pos, 625, 300, 50);
+	button[LOAD_GAME] = new Button(renderer, "image/Load_game_button.png", pos, 475, 300, 50);
+	button[QUIT] = new Button(renderer, "image/Quit_button.png", pos, 700, 300, 50);
+	button[SOUND_ON] = new Button(renderer, "image/SoundOn_button.png", pos, 550, 300, 50);
+	button[SOUND_OFF] = new Button(renderer, "image/SoundOff_button.png", pos, 550, 300, 50);
 	text = new Text(renderer);
     getTexture(texture,renderer,"image/MainMenu.png",69,69,69);
     play = false;
@@ -15,29 +16,31 @@ MainMenu::MainMenu(SDL_Renderer* renderer) : Object(renderer)
     resetHighscore = false;
     soundChange = false;
     soundOn = true;
+    loadGame = false;
     setRectSize(renderRect,0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
 }
 
 MainMenu::~MainMenu()
 {
-    delete button[PLAY];
+    delete button[NEW_GAME];
 	delete button[QUIT];
 	delete button[RESET_HIGHSCORE];
-	delete button[SOUNDON];
-	delete button[SOUNDOFF];
+	delete button[SOUND_ON];
+	delete button[SOUND_OFF];
+	delete button[LOAD_GAME];
 	delete text;
 }
 
 void MainMenu::HandleMenuEvent(SDL_Event &event)
 {
-    for(int i = 0; i < 3; i++) {
+    for(int i = 0; i < 4; i++) {
         button[i]->handleEvent(&event);
     }
     if(soundOn){
-        button[SOUNDON]->handleEvent(&event);
+        button[SOUND_ON]->handleEvent(&event);
     }
     else{
-        button[SOUNDOFF]->handleEvent(&event);
+        button[SOUND_OFF]->handleEvent(&event);
     }
     CheckButton();
 }
@@ -46,15 +49,15 @@ void MainMenu::RenderMenu( Sint32 &bestScore )
 {
     SDL_RenderClear(renderer);
     SDL_RenderCopy(renderer,texture,NULL,&renderRect);
-    for(int i = 0; i < 3; i++)
+    for(int i = 0; i < 4; i++)
     {
         button[i]->render();
     }
     if(soundOn){
-        button[SOUNDON]->render();
+        button[SOUND_ON]->render();
     }
     else {
-        button[SOUNDOFF]->render();
+        button[SOUND_OFF]->render();
     }
     text->DrawText("Current best score: " + std::to_string(bestScore), 1300, 700, 30, -30.0);
     SDL_RenderPresent(renderer);
@@ -62,9 +65,9 @@ void MainMenu::RenderMenu( Sint32 &bestScore )
 
 void MainMenu::CheckButton()
 {
-    if(button[PLAY]->selected) {
+    if(button[NEW_GAME]->selected) {
         play = 1;
-        button[PLAY]->selected = false;
+        button[NEW_GAME]->selected = false;
     }
     if(button[QUIT]->selected) {
         quitGame = 1;
@@ -74,14 +77,18 @@ void MainMenu::CheckButton()
         resetHighscore = 1;
         button[RESET_HIGHSCORE]->selected = false;
     }
-    if(button[SOUNDON]->selected) {
+    if(button[SOUND_ON]->selected) {
         soundChange = true;
         soundOn = !soundOn;
-        button[SOUNDON]->selected = false;
+        button[SOUND_ON]->selected = false;
     }
-    if(button[SOUNDOFF]->selected) {
+    if(button[SOUND_OFF]->selected) {
         soundChange = true;
         soundOn = !soundOn;
-        button[SOUNDOFF]->selected = false;
+        button[SOUND_OFF]->selected = false;
+    }
+    if(button[LOAD_GAME]->selected) {
+        loadGame = 1;
+        button[LOAD_GAME]->selected = false;
     }
 }

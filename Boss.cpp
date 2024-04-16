@@ -15,6 +15,24 @@ Boss::Boss(SDL_Renderer *renderer, unsigned int level, SDL_Texture* pre_creating
     firstLivesLeft = livesLeft;
 }
 
+Boss::Boss(SDL_Renderer *renderer, SDL_Texture* pre_creatingTexture, float x_pos, float y_pos, int bossHealth, int firstBossHealth) : MovingObject(renderer)
+{
+    texture = pre_creatingTexture;
+    width = 400;
+    height = 400;
+    getTexture(healthBarTexture, renderer, "image/Boss_health_bar.png", 69, 69, 69);
+    moveSpeed = 3;
+    x_movespeed = 5;
+    appear = 0;
+    setRectSize(RenderBox, x_pos, y_pos, width, height);
+    if(bossHealth <= 0)
+        alive = 0;
+    else
+        alive = 1;
+    livesLeft = bossHealth;
+    firstLivesLeft = firstBossHealth;
+}
+
 Boss::~Boss()
 {
     SDL_DestroyTexture(texture);
@@ -25,13 +43,14 @@ void Boss::Render(unsigned int frame)
 {
     setRectSize(bossClipBox, 0, ((frame / 5)%34) * 400, 400, 400);
     setRectSize(ClipBox, 0, 0, livesLeft * (700 / firstLivesLeft), 188 ); // width 700, height 188
-    setRectSize(HealthBarBox,RenderBox.x + 50, RenderBox.y + 175, livesLeft * (150 / firstLivesLeft), 10); // suit
+    setRectSize(HealthBarBox,RenderBox.x + 50, RenderBox.y + 175, (float)livesLeft * (150 / (float)firstLivesLeft), 10); // suit
     SDL_RenderCopy(renderer,texture,&bossClipBox,&RenderBox);
     if(alive)
         SDL_RenderCopy(renderer,healthBarTexture,&ClipBox,&HealthBarBox);
     for(Bullet* currentBossBullet : bossBulletList){
         currentBossBullet->RenderEx(frame);
     }
+//    std::cout << HealthBarBox.w << std::endl;
 //    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 //    SDL_RenderDrawRect(renderer,&RenderBox);
 //    SDL_RenderDrawRect(renderer,&Hitbox);
@@ -84,6 +103,11 @@ void Boss::DecreaseLives(int damage)
 SDL_Rect* Boss::getHitBox()
 {
     return &Hitbox;
+}
+
+SDL_Rect* Boss::getRenderBox()
+{
+    return &RenderBox;
 }
 
 void Boss::LoadBullet(const SDL_Rect *mainHitbox)

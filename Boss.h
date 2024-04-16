@@ -10,6 +10,7 @@ class Boss : public MovingObject
 {
 public:
     Boss(SDL_Renderer *renderer, unsigned int level, SDL_Texture* pre_creatingTexture);
+    Boss(SDL_Renderer *renderer, SDL_Texture* pre_creatingTexture, float x_pos, float y_pos, int bossHealth, int firstBossHealth);
     ~Boss();
 
     int livesLeft;
@@ -25,6 +26,7 @@ public:
     double getAngle(const SDL_Rect *mainHitbox);
     void DecreaseLives(int damage);
     SDL_Rect* getHitBox();
+    SDL_Rect* getRenderBox();
 
 private:
     SDL_Rect Hitbox;

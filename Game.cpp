@@ -20,22 +20,27 @@ bool Game::Init()
     gameController = SDL_GameControllerOpen(0);
     CreateMenus();
     CreateComplicateTexture();
+    NewGameObjects(); // test
     soundOn = true;
     quit = false;
+    newgame = true;
     return true;
 }
 
 void Game::Run()
 {
     EnterMainMenu();
-    NewGame();
+    if(mainMenu->play)
+        NewGame();
+    else
+        PlayLoadGame();
     GameLoop();
     Quit();
 }
 
 void Game::EnterMainMenu()
 {
-    while(mainMenu->play == false && quit == false){
+    while(mainMenu->play == false && quit == false && mainMenu->loadGame == false){
         if( SDL_PollEvent( &event ) != 0)
         {
             if( event.type == SDL_QUIT ) quit = true;
@@ -52,6 +57,17 @@ void Game::NewGame()
     InitNewGameStats();
     StartTimers();
     ClearLists();
+}
+
+void Game::PlayLoadGame()
+{
+    ClearGameObjects();
+    NewGameObjects();
+    InitNewGameStats();
+    LoadGame();
+    NewMusic();
+    //StartTimers();
+    //need to add frame + time recorded
 }
 
 void Game::GameLoop()
@@ -83,7 +99,7 @@ void Game::GameLoop()
             Pause();
         }
         HandleMusicVolume();
-        //std::cout << obstacleMoveSpeed << std::endl;
+        //std::cout << boss->livesLeft << std::endl;
         //stable fps
         frameTime = SDL_GetTicks() - frameStart;
         if (frameTime < DELAY_TIME)
@@ -172,6 +188,9 @@ void Game::StartGame()
         soundOn = !soundOn;
         mainMenu->soundChange = false;
     }
+//    if(mainMenu->loadGame){
+//        LoadGame();
+//    }
 }
 
 void Game::Update()
@@ -283,7 +302,9 @@ void Game::NewMusic()
 
 void Game::StartTimers()
 {
+    timer.setSavedTicks(0);
 	timer.start();
+	bossTimer.setSavedTicks(0);
 	bossTimer.start();
 }
 
@@ -519,7 +540,7 @@ void Game::RenderLaser()
 void Game::RenderWarning()
 {
     SDL_Rect renderRect;
-    setRectSize(renderRect, pos - 40, 40, 50, 50);
+    setRectSize(renderRect, pos - 75, 40, 100, 100);
     if((frame / 20) % 2 == 0){
         SDL_RenderCopy(renderer, warningTexture, NULL, &renderRect);
         //SDL_RenderDrawRect(renderer,&laserHitbox);
@@ -573,12 +594,12 @@ void Game::SpawnObjects()
     }
 
     if(frame % largeStarSpawnRate == 0){
-        largeStar = new Star(renderer, 5, 5, 7);
+        largeStar = new Star(renderer, LARGE_STAR_SIZE, LARGE_STAR_SIZE, LARGE_STAR_MOVE_SPEED);
         largeStarList.push_back(largeStar);
     }
 
     if(frame % starSpawnRate == 0){
-    	star = new Star(renderer, 1, 1, 5);
+    	star = new Star(renderer, STAR_SIZE, STAR_SIZE, STAR_MOVE_SPEED);
         starList.push_back(star);
     }
 
@@ -655,9 +676,23 @@ void Game::UpdateList()
 {
     UpdateList<Star*>(starList);
     UpdateList<Star*>(largeStarList);
-    UpdateList<Coin*>(coinList);
+    //UpdateList<Coin*>(coinList);
     UpdateList<Background*>(backgroundList);
-    UpdateList<Bullet*>(bulletList);
+    std::list<Bullet*>::iterator currentBullet = bulletList.begin();
+    while (currentBullet != bulletList.end()){
+        //Check if off screen
+        if ((*currentBullet)->Box.y <= 0)
+        {
+            if(!(*currentBullet)->isSpecialBullet)
+                delete(*currentBullet);
+            // erase returns the iterator following the last removed element
+            currentBullet = bulletList.erase(currentBullet);
+        }
+        else {
+            (*currentBullet)->Update();
+            ++currentBullet;
+        }
+    }
     std::list<Obstacles*>::iterator currentObstacle = obstaclesList.begin();
     while (currentObstacle != obstaclesList.end()){
         //Check if obstacle is off screen
@@ -672,6 +707,20 @@ void Game::UpdateList()
         else {
             (*currentObstacle)->Update();
             ++currentObstacle;
+        }
+    }
+    std::list<Coin*>::iterator currentCoin = coinList.begin();
+    while (currentCoin != coinList.end()){
+        //Check if obstacle is off screen
+        if ((*currentCoin)->Box.y > SCREEN_HEIGHT)
+        {
+            delete(*currentCoin);
+            // erase returns the iterator following the last removed element
+            currentCoin = coinList.erase(currentCoin);
+        }
+        else {
+            (*currentCoin)->Update(Spaceship->getMainHitBox());
+            ++currentCoin;
         }
     }
 }
@@ -783,6 +832,158 @@ void Game::Pause()
         soundOn = !soundOn;
         pauseMenu->soundChange = false;
     }
+    if(pauseMenu->saveGame){
+        SaveGame();
+        pauseMenu->saveGame = false;
+    }
+}
+
+void Game::SaveGame()
+{
+    //save game module
+    std::ofstream savefile("SaveGame.txt", std::ios::out | std::ios::trunc);
+    savefile << GAMESTATS << " " << frame << " " << obstaclesSpawnRate << " ";
+    savefile << obstacleMoveSpeed << " " << level << " " << score << " " << coinCounted << " " << laserOn << " " << hasBoss << " " << pos << " " << levelUpdate1 << " " << levelUpdate2 << "\n";
+    savefile << SPACESHIP << " " << Spaceship->livesLeft << " " << Spaceship->x << " " << Spaceship->y << " " << Spaceship->shielded << "\n";
+    for(Background* currentBackground : backgroundList){
+        savefile << BACKGROUND << " " << currentBackground->getType() << " " << currentBackground->Box.x << " " << currentBackground->Box.y << "\n";
+    }
+    for(Obstacles* currentObstacle : obstaclesList){
+        savefile << OBSTACLE << " " <<currentObstacle->getType() << " " << currentObstacle->Box.x << " " << currentObstacle->Box.y << " " << currentObstacle->getSpeed() << "\n";
+    }
+    for(Coin* currentCoin : coinList){
+        savefile << COIN << " " << currentCoin->getType() << " " << currentCoin->Box.x << " " << currentCoin->Box.y << "\n";
+    }
+    for(Star* currentStar : starList){
+        savefile << STAR << " " << currentStar->Box.x << " " << currentStar->Box.y << "\n";
+    }
+    for(Star* currentStar : largeStarList){
+        savefile << LARGESTAR << " " << currentStar->Box.x << " " << currentStar->Box.y << "\n";
+    }
+    for(Bullet* currentBullet : bulletList){
+        savefile << BULLET << " " << currentBullet->Box.x << " " << currentBullet->Box.y << "\n";
+    }
+    savefile.close();
+    if(hasBoss){
+        std::ofstream saveBoss("SaveBoss.txt", std::ios::out | std::ios::trunc);
+        saveBoss << BOSS << " " << boss->getRenderBox()->x << " " << boss->getRenderBox()->y << " " << boss->livesLeft << " " << boss->firstLivesLeft << "\n";
+        for(Bullet* currentBossBullet : boss->bossBulletList){
+            saveBoss << BOSS_BULLET << " " << currentBossBullet->Box.x << " " << currentBossBullet->Box.y << " " << currentBossBullet->angle << "\n";
+        }
+        saveBoss.close();
+    }
+    std::ofstream saveTime("SaveTime.txt", std::ios::out | std::ios::trunc);
+    saveTime << timer.getTicks();
+    saveTime << " " << laserTimer.getTicks();
+    saveTime << " " << bossTimer.getTicks() << "\n";
+    saveTime.close();
+}
+
+void Game::LoadGame()
+{
+    std::ifstream loadfile("SaveGame.txt");
+    while(!loadfile.eof()){
+        std::string line;
+        getline(loadfile, line);
+        //std::cout << line << std::endl;
+        std::stringstream stream(line);
+        int type;
+        stream >> type;
+        if(type == GAMESTATS){
+            stream >> frame >> obstaclesSpawnRate >> obstacleMoveSpeed >> level >> score >> coinCounted >> laserOn >> hasBoss >> pos >> levelUpdate1 >> levelUpdate2;
+        }
+        if(type == SPACESHIP){
+            int x_pos, y_pos;
+            stream >> Spaceship->livesLeft >> x_pos >> y_pos;
+            Spaceship->SetPos(x_pos,y_pos);
+            bool shieldState;
+            stream >> shieldState;
+            Spaceship->shielded = shieldState;
+        }
+        if(type == BACKGROUND){
+            float x_pos,y_pos;
+            int backgroundType;
+            stream >> backgroundType >> x_pos >> y_pos;
+            background = new Background(renderer, backgroundType, x_pos, y_pos);
+            backgroundList.push_back(background);
+        }
+        if(type == STAR){
+            float x_pos,y_pos;
+            stream >> x_pos >> y_pos;
+            star = new Star(renderer, STAR, x_pos, y_pos);
+            starList.push_back(star);
+        }
+        if(type == LARGESTAR){
+            float x_pos,y_pos;
+            stream >> x_pos >> y_pos;
+            largeStar = new Star(renderer, LARGESTAR, x_pos, y_pos);
+            largeStarList.push_back(largeStar);
+        }
+        if(type == OBSTACLE){
+            int obstacleType;
+            stream >> obstacleType;
+            float x_pos, y_pos, speed;
+            stream >> x_pos >> y_pos >> speed;
+            obstacle = new Obstacles(renderer, speed, obstacleType, x_pos, y_pos);
+            obstaclesList.push_back(obstacle);
+        }
+        if(type == COIN){
+            int powerupType;
+            float x_pos, y_pos;
+            stream >> powerupType >> x_pos >> y_pos;
+            coin = new Coin(renderer, powerupType, x_pos, y_pos);
+            coinList.push_back(coin);
+        }
+        if(type == BULLET){
+            float x_pos, y_pos;
+            stream >> x_pos >> y_pos;
+            bullet = new Bullet(renderer,x_pos,y_pos);
+            bulletList.push_back(bullet);
+        }
+    }
+    loadfile.close();
+    if(hasBoss){
+        std::ifstream loadBoss("SaveBoss.txt");
+        while(!loadBoss.eof()){
+            int type;
+            std::string line;
+            getline(loadBoss,line);
+            std::stringstream stream(line);
+            stream >> type;
+            if(type == BOSS){
+                float x_pos, y_pos;
+                int bossHealth, firstBossHealth;
+                stream >> x_pos >> y_pos >> bossHealth >> firstBossHealth;
+                boss = new Boss(renderer,bossTexture,x_pos,y_pos,bossHealth,firstBossHealth);
+            }
+            if(type == BOSS_BULLET){
+                double angle;
+                float x_pos, y_pos;
+                stream >> x_pos >> y_pos >> angle;
+                bullet = new Bullet(renderer, angle, x_pos, y_pos);
+                boss->bossBulletList.push_back(bullet);
+            }
+        }
+        loadBoss.close();
+    }
+    //load time
+    std::ifstream loadTime("SaveTime.txt");
+    std::string line;
+    getline(loadTime,line);
+    std::stringstream stream(line);
+    Uint32 saveTimer, saveLaserTimer, saveBossTimer;
+    stream >> saveTimer >> saveLaserTimer >> saveBossTimer;
+    timer.setSavedTicks(saveTimer);
+    timer.start();
+    if(laserOn) {
+        laserTimer.setSavedTicks(saveLaserTimer);
+        laserTimer.start();
+    }
+    if(!hasBoss) {
+        bossTimer.setSavedTicks(saveBossTimer);
+        bossTimer.start();
+    }
+    //need to fix laser in terms of pos
 }
 
 void Game::freePointers()

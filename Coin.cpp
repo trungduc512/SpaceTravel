@@ -20,14 +20,38 @@ Coin::Coin(SDL_Renderer *renderer, unsigned int Count) : MovingObject(renderer)
     setRectSize(Box, x, y, Box.w, Box.h);
 }
 
+Coin::Coin(SDL_Renderer *renderer, int type, float x_pos, float y_pos) : MovingObject(renderer)
+{
+    setType(type);
+
+    getTexture(texture, renderer, path, 0, 0, 0);
+    //get renderBox size
+    Box.w = 60;
+    Box.h = 60;
+
+	// spawning coin randomly base on sreenwidth
+    x = x_pos;
+	y = y_pos;
+	moveSpeed = 10; // default speed = 10
+    setRectSize(Box, x, y, Box.w, Box.h);
+}
+
 Coin::~Coin()
 {
     SDL_DestroyTexture(texture);
 }
 
-void Coin::Update()
+void Coin::Update( const SDL_Rect* mainHitbox)
 {
-	Box.y += moveSpeed;
+    float distance = sqrt(pow((mainHitbox->x - Box.x),2) + pow((mainHitbox->y - Box.y),2));
+    if(distance < 200){
+        float dX = (mainHitbox->x - Box.x) / distance * 20;
+        float dY = (mainHitbox->y - Box.y) / distance * 20;
+        Box.x += dX;
+        Box.y += dY;
+    }
+    else
+        Box.y += moveSpeed;
 }
 
 void Coin::Render( unsigned int frame )
@@ -73,4 +97,26 @@ void Coin::GetRandomPowerUp()
     else if(powerUpType == REDUCE_COOLDOWN){
         path = "image/battery_sprite_sheet.png";
     }
+}
+
+void Coin::setType( int type )
+{
+    powerUpType = type;
+    if(type == -1){
+        path = "image/coin.png";
+    }
+    else if(type == HEAL){
+        path = "image/heart_sprite.png";
+    }
+    else if(type == SHIELD){
+        path = "image/shield_powerup_sprite.png";
+    }
+    else if(type == REDUCE_COOLDOWN){
+        path = "image/battery_sprite_sheet.png";
+    }
+}
+
+int Coin::getType()
+{
+    return powerUpType;
 }

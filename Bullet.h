@@ -10,6 +10,8 @@ public:
     Bullet(SDL_Renderer* renderer, const SDL_Rect *mainHitbox);
     Bullet(SDL_Renderer* renderer, const SDL_Rect *mainHitbox, SDL_Texture* pre_creatingTexture);
     Bullet(SDL_Renderer* renderer, const SDL_Rect *bossHitbox, double angle);
+    Bullet(SDL_Renderer* renderer, double angle, float x_pos, float y_pos);
+    Bullet(SDL_Renderer* renderer, float x_pos, float y_pos);
     ~Bullet();
 
     void Render();
@@ -19,6 +21,8 @@ public:
     void UpdateEx();
     SDL_Rect* getHitBox();
     bool isSpecialBullet;
+    double vX,vY;
+    double angle;
 
 private:
     SDL_Rect Hitbox;
@@ -26,8 +30,6 @@ private:
     SDL_Rect Renderbox;
     SDL_Texture* texture;
     std::string path;
-    double vX,vY;
-    double angle;
 };
 
 #endif // BULLET_H_INCLUDED
