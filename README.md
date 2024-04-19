@@ -9,6 +9,8 @@
 Space Travel là một trò chơi điện tử giả lập chuyến du hành trong không gian vũ trụ bất tận. Hãy di chuyển, bắn đạn, nhặt sức mạnh để sinh tồn trong không gian đầy rẫy nguy hiểm này.
 ## Chi tiết về game
 ### Gameplay
+*Nhấp vào để xem:*
+- https://www.youtube.com/watch?v=tOJCkqWgfzM
 ### Nội dung game
 - Bạn sẽ có một chiếc tàu vũ trụ được trang bị đầy đủ đạn dược không giới hạn. Nhiệm vụ của bạn là điều khiển tàu di chuyển qua lại trên bản đồ và bắn các chướng ngại vật để sống sót.
 - Sau khoảng 15 giây, sẽ có một cảnh báo. Hãy di chuyển, không thì một tia laser khổng lồ sẽ chiếu vào tàu của bạn.
@@ -46,4 +48,5 @@ Space Travel là một trò chơi điện tử giả lập chuyến du hành tro
     - Xuất/nhập file
     - Templates trong C++
     - Thư viện ngoài : SDL2, SLD2_image, SDL2_mixer, SLD2_ttf
+## Số điểm mong muốn đạt được: 8.5-9/10.
 # Hope you enjoy!
