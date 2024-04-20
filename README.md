@@ -35,8 +35,8 @@ Space Travel là một trò chơi điện tử giả lập chuyến du hành tro
 - Lưu và load trạng thái game
 - Đánh boss
 - Nhạc game và Sound Effect (có thể bật tắt trong pause menu)
-- Animation
-- Thời gian đã chơi
+- Animation và đồ họa sống động
+- Ghi lại thời gian đã chơi
 - Toán và Vật lí trong game
 ## Về khía cạnh lập trình
 - SpaceTravel đã sử dụng:
@@ -48,5 +48,9 @@ Space Travel là một trò chơi điện tử giả lập chuyến du hành tro
     - Xuất/nhập file
     - Templates trong C++
     - Thư viện ngoài : SDL2, SLD2_image, SDL2_mixer, SLD2_ttf
-## Số điểm mong muốn đạt được: 8.5-9/10.
+# Số điểm mong muốn đạt được: 8.5-9/10.
+## Credit
+* Hình ảnh lấy từ internet.
+* Sử dụng chủ yếu để chỉnh sửa ảnh và animation: [Photopea](https://www.photopea.com/) và [Ezgif](https://ezgif.com/).
+* Nguồn thông tin chính để học SDL: [LazyFoo ](https://lazyfoo.net/.tutorials/SDL/) và [Youtube](https://www.youtube.com/).
 # Hope you enjoy!
