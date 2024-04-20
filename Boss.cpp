@@ -42,7 +42,7 @@ Boss::~Boss()
 void Boss::Render(unsigned int frame)
 {
     setRectSize(bossClipBox, 0, ((frame / 5)%34) * 400, 400, 400);
-    setRectSize(ClipBox, 0, 0, livesLeft * (700 / firstLivesLeft), 188 ); // width 700, height 188
+    setRectSize(ClipBox, 0, 0, (float)livesLeft * (700 / (float)firstLivesLeft), 188 ); // width 700, height 188
     setRectSize(HealthBarBox,RenderBox.x + 50, RenderBox.y + 175, (float)livesLeft * (150 / (float)firstLivesLeft), 10); // suit
     SDL_RenderCopy(renderer,texture,&bossClipBox,&RenderBox);
     if(alive)
@@ -77,7 +77,7 @@ void Boss::Update()
     //
     std::list<Bullet*>::iterator currentBossBullet = bossBulletList.begin();
     while (currentBossBullet != bossBulletList.end()){
-        //Check if obstacle is off screen
+        //Check if bullet is off screen
         if ((*currentBossBullet)->Box.y > SCREEN_HEIGHT)
         {
             delete(*currentBossBullet);
