@@ -94,6 +94,10 @@ void Game::GameLoop()
                 GameOver();
                 frame++;
             }
+            if(frame%180==0 && hasBoss) {
+                DijkstraExplode();
+                boss->DecreaseLives(3);
+            }
         }
         else {
             Pause();
@@ -109,11 +113,164 @@ void Game::GameLoop()
     }
 }
 
+//test
+
+// Function to calculate distance between two points
+double calculateWeight(const Point& a, const Point& b)
+{
+    return std::sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
+}
+
+// Function to generate the weighted graph
+std::vector<Edge> generateWeightedGraph(const std::vector<Point>& points)
+{
+    std::vector<Edge> edges;
+    for (size_t i = 0; i < points.size(); ++i) {
+        for (size_t j = i + 1; j < points.size(); ++j) {
+            edges.push_back({i, j, calculateWeight(points[i], points[j])});
+        }
+    }
+    return edges;
+}
+
+void dijkstra(int n, int Source, std::vector<std::vector<EdgeForDijkstra>> E, std::vector<double> &distance, std::vector<int> &trace) {
+    trace.resize(n, -1);
+    distance.resize(n,INF);
+
+    std::vector<bool> visited(n, 0);
+    distance[Source] = 0;
+
+    for (int i = 0; i < n; i++) {
+        int uBest;
+        double Max = INF;
+        for (int u = 0; u < n; u++) {
+            if(distance[u] < Max && visited[u] == false) {
+                uBest = u;
+                Max = distance[u];
+            }
+        }
+
+        int u = uBest;
+        visited[u] = true;
+        for(EdgeForDijkstra x : E[u]) {
+            int v = x.v;
+            double w = x.w;
+            if(distance[v] > distance[u] + w) {
+                distance[v] = distance[u] + w;
+                trace[v] = u;
+            }
+        }
+    }
+}
+
+void printPath(int u, const std::vector<int>& trace) {
+    std::stack<int> path;
+    while(u != -1) {
+        path.push(u);
+        u = trace[u];
+    }
+    while(!path.empty()) {
+        //std::cout << path.top() << " ";
+        path.pop();
+    }
+    //std::cout << std::endl;
+}
+
+std::vector<int> tracePath(int u, const std::vector<int>& trace) {
+    std::stack<int> path;
+    while(u != -1) {
+        path.push(u);
+        u = trace[u];
+    }
+    std::vector<int> result;
+    while(!path.empty()) {
+        result.push_back(path.top());
+        path.pop();
+    }
+    return result;
+}
+
+//end test
+
+void Game::DijkstraExplode()
+{
+// test dijkstra
+    std::vector<Point> points;
+    Point x;
+//    x = {Spaceship->x, Spaceship->y};
+//    points.push_back(x);
+    for(Obstacles* currentObstacle : obstaclesList){
+        x = {currentObstacle->Box.x,currentObstacle->Box.y};
+        if(x.y > 0){
+            points.push_back(x);
+            point.push_back(x);
+        }
+    }
+    reverse(points.begin(),points.end());
+    reverse(point.begin(),point.end());
+    x = {Spaceship->x, Spaceship->y};
+    points.insert(points.begin(),x);
+    point.insert(point.begin(),x);
+    if(hasBoss) {
+        points.push_back({boss->getRenderBox()->x + 400/2, boss->getRenderBox()->y + 400/2});
+        point.push_back({boss->getRenderBox()->x + 400/2, boss->getRenderBox()->y + 400/2});
+//        std::cout << boss->getRenderBox()->x + 400/2 << " " << boss->getRenderBox()->y + 400/2 << " boss" << std::endl;
+    }
+//    for(Point p : points) std::cout << p.x << " " << p.y << std::endl;
+    std::vector<Edge> edges = generateWeightedGraph(points);
+//    std::cout << points.size() << std::endl;
+//    std::cout << edges[points.size() - 2].weight << std::endl;
+    edges[points.size()-2].weight = INF;
+//    for(int i = 0; i < edges.size(); i+=2){
+//        edges[i].weight = INF;
+//    }
+//    for(Edge e : edges){
+//        std::cout << e.from << " " << e.to << " " << e.weight << std::endl;
+//    }
+    std::vector<std::vector<EdgeForDijkstra>> E(points.size());
+    for (Edge edge : edges) {
+        EdgeForDijkstra e;
+        e.v = edge.to;
+        e.w = edge.weight;
+        E[edge.from].push_back(e);
+    }
+    std::vector<double> distance;
+    std::vector<int> trace;
+    dijkstra(points.size(),0,E,distance,trace);
+//    printPath(points.size()-1, trace);
+    std::vector<int> path = tracePath(points.size()-1,trace);
+    dijkstraPath = tracePath(points.size()-1,trace);
+    //for(int x : path) std::cout << x << " ";
+    //std::cout << std::endl;
+    for(int i = 1; i < path.size(); i++)
+    {
+//        std::cout << points[i].x << " " << points[i].y << " " << std::endl;
+        std::list<Obstacles*>::iterator currentObstacle = obstaclesList.begin();
+        while (currentObstacle != obstaclesList.end()){
+                if((*currentObstacle)->Box.x == points[path[i]].x && (*currentObstacle)->Box.y == points[path[i]].y)
+                    currentObstacle = obstaclesList.erase(currentObstacle);
+            else {
+                ++currentObstacle;
+            }
+        }
+    }
+//    for(int i = 0; i < path.size() - 1; i++){
+//        std::cout << points[path[i]].x << " " << points[path[i]].y << std::endl;
+//        RenderLightning(points[path[i]],points[path[i+1]]);
+//    }
+//    explode
+//    for(int i = 0; i < 4; i++){
+//        explosion->Render(i,(*currentObstacle)->getHitBox());
+//    }
+}
+// end test dijkstra
+
 void Game::Quit()
 {
     freePointers();
     SDL_DestroyTexture(bossTexture);
     SDL_DestroyTexture(specialBulletTexture);
+    SDL_DestroyTexture(lightning);
     //save best score
     file = SDL_RWFromFile( "bestscore.bin", "w+b" );
     SDL_RWwrite( file, &bestScore, sizeof(Sint32), 1 );
@@ -230,6 +387,31 @@ void Game::RenderObjects()
     RenderBoss();
     RenderHUD();
     RenderText();
+    if(!point.empty() && !dijkstraPath.empty() && firstLightning == 0){
+        if(!firstLightning){
+            lightningTimer.start();
+            firstLightning = 1;
+        }
+    }
+    if(lightningTimer.getTicks() <= 200 && lightningTimer.isStarted()){
+        for(int i = 0; i < dijkstraPath.size() - 1; i++){
+            //std::cout << point[dijkstraPath[i]].x << " " << point[dijkstraPath[i]].y << std::endl;
+            RenderLightning(point[dijkstraPath[i]],point[dijkstraPath[i+1]]);
+            //std::cout << dijkstraPath[i] << " ";
+        }
+        //std::cout << std::endl;
+    }
+    else{
+        point.clear();
+        dijkstraPath.clear();
+        lightningTimer.stop();
+        firstLightning = 0;
+    }
+//    if(hasBoss){
+//        Point a = {Spaceship->x,Spaceship->y};
+//        Point b = {boss->getRenderBox()->x + boss->getRenderBox()->w/2,boss->getRenderBox()->y + boss->getRenderBox()->h/2};
+//        RenderLightning(a,b);
+//    }
 }
 
 void Game::HandleMusicVolume()
@@ -245,6 +427,7 @@ void Game::HandleMusicVolume()
 void Game::InitNewGameStats()
 {
 	frame = 0;
+	firstLightning = 0;
 	obstaclesSpawnRate = INIT_OBSTACLE_SPAWN_RATE;
 	obstacleMoveSpeed = INIT_OBSTACLE_MOVE_SPEED;
 	Spaceship->died = false;
@@ -288,6 +471,7 @@ void Game::NewGameObjects()
     explosion = new Explosion(renderer);
     getTexture(warningTexture, renderer, "image/warning.png", 69, 69, 69);
     getTexture(laserTexture, renderer, "image/laser.png", 0, 0, 0);
+    getTexture(lightning, renderer, "image/R.png", 69, 69, 69);
 }
 
 void Game::NewMusic()
@@ -557,6 +741,19 @@ bool Game::NewLaser()
         return 1;
     }
     return 0;
+}
+
+void Game::RenderLightning(Point a, Point b)
+{
+    SDL_Rect renderBox;
+    SDL_Texture* test;
+//    std::cout << calculateWeight(a,b) << " weight" << std::endl;
+    setRectSize(renderBox, (a.x + b.x)/2,(a.y + b.y)/2 - calculateWeight(a,b)/2,100,calculateWeight(a,b));
+//    SDL_Point center = {(a.x+b.x)/2,(a.y+b.y)/2};
+    double angle = atan2( b.x - a.x, b.y - a.y );
+    //std::cout << angle * 180 / M_PI << " angle" << std::endl;
+    SDL_RenderCopyEx(renderer,lightning, NULL, &renderBox, 180 - angle * 180 / M_PI,NULL,SDL_FLIP_HORIZONTAL);
+//    SDL_RenderCopy(renderer,lightning, NULL, &renderBox);
 }
 
 bool Game::NewBoss()

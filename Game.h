@@ -23,6 +23,10 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <vector>
+#include <stack>
+#include <algorithm>
+#include <bits/stdc++.h>
 
 class Game
 {
@@ -48,6 +52,7 @@ public:
     void RenderBackground();
     void RenderObstacles();
     void RenderCoin();
+    void RenderLightning(Point a, Point b);
     void LaserHandle();
     void CheckBulletAndObstaclesCollision();
     void CheckDeath();
@@ -72,6 +77,7 @@ public:
     void HandleInput();
     void HandleMusicVolume();
     void SpawnObjects();
+    void DijkstraExplode();
     template <typename Container> void UpdateList(std::list<Container> &checklist);
     template <typename Container> void ClearList(std::list<Container> &checklist);
     void increaseScore(int scoreGet);
@@ -136,10 +142,12 @@ private:
 	Timer timer;
 	Timer laserTimer;
 	Timer bossTimer;
+	Timer lightningTimer;
 	SDL_Texture* warningTexture;
 	SDL_Texture* laserTexture;
 	SDL_Texture* bossTexture;
 	SDL_Texture* specialBulletTexture;
+	SDL_Texture* lightning;
 	SDL_Rect laserHitbox;
 	bool isPause;
 	bool laserOn;
@@ -152,6 +160,16 @@ private:
 	bool newgame;
 	int pos;
 	int lastIncreaseSpeed;
+	bool firstLightning;
+	std::vector<Point> point;
+	std::vector<int> dijkstraPath;
 };
 
+
+
+std::vector<Edge> generateWeightedGraph(const std::vector<Point>& points);
+double calculateWeight(const Point& a, const Point& b);
+void dijkstra(int n, int S, std::vector<std::vector<EdgeForDijkstra>> E, std::vector<double> &D, std::vector<int> &trace);
+std::vector<int> tracePath(int u, const std::vector<int>& trace);
+void printPath(int u, const std::vector<int>& trace);
 #endif // GAME_H_INCLUDED

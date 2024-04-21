@@ -20,11 +20,11 @@ const int TIME_TO_NEXT_LEVEL = 10;
 const int SCORE_TO_SPEED_UP = 1500;
 const int MAX_OBSTACLE_SPEED = 15;
 const int BOSS_BULLET_SPEED = 15;
-const int MIN_OBSTACLE_SPAWN_RATE = 8;
-const int INIT_OBSTACLE_SPAWN_RATE = 25;
-const int INIT_OBSTACLE_MOVE_SPEED = 10;
+const int MIN_OBSTACLE_SPAWN_RATE = 8; // 8
+const int INIT_OBSTACLE_SPAWN_RATE = 25; //25
+const int INIT_OBSTACLE_MOVE_SPEED = 10; //10
 const int LASER_SPAWN_RATE = 900; //900
-const int BOSS_SPAWN_TIME = 30;//30
+const int BOSS_SPAWN_TIME = 5;//30
 const int BOSS_SHOOT_RATE = 45;
 const int LASER_DURATION = 500;
 const int WARNING_TIME = 2000;
@@ -47,5 +47,6 @@ const unsigned int SPACESHIP_HEALTH = 6;
 const float BOSS_MIN_Y_POS = 200;
 const float STAR_MOVE_SPEED = 5;
 const float LARGE_STAR_MOVE_SPEED = 7;
+const double INF = 10000;
 
 #endif // GAMECONSTANTS_H_INCLUDED

@@ -42,13 +42,14 @@ Space Travel là một trò chơi điện tử giả lập chuyến du hành tro
 - SpaceTravel đã sử dụng:
     - Class trong C++
     - Header file (.h) và source file (.cpp)
+    - Thuật toán Dijkstra để tìm đường đi ngắn nhất giữa tàu và boss qua các thiên thể
     - Overloading functions
     - STL List
     - Con trỏ
     - Xuất/nhập file
     - Templates trong C++
     - Thư viện ngoài : SDL2, SLD2_image, SDL2_mixer, SLD2_ttf
-# Số điểm mong muốn đạt được: 8.5-9/10.
+# Số điểm mong muốn đạt được: 9/10.
 ## Credit
 * Hình ảnh lấy từ internet.
 * Sử dụng chủ yếu để chỉnh sửa ảnh và animation: [Photopea](https://www.photopea.com/) và [Ezgif](https://ezgif.com/).
